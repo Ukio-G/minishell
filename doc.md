@@ -227,7 +227,7 @@ int main()
 
 ### chdir
 
-## Получения информации о доступе к файлам
+## Получение информации о доступе к файлам
 
 Функции `stat`, `lstat`, `fstat` заполняют следующую структуру:
 
@@ -281,7 +281,8 @@ int stat(const char *restrict path, struct stat *restrict buf);
 
 Если `path` указывает на симлинк — то будет выведена информация о файле, на который указывает симлинк. 
 
-Узнать размер, права доступа и тип к некоторого файла:
+#### Пример кода:
+Узнать размер, права доступа и тип некоторого файла:
 
 ```c
 #include <stdio.h>
@@ -312,24 +313,21 @@ void print_file_type(struct stat *s, char *filename)
 	/* В UNIX все - файл. В том числе и устройства, ссылки, пайпы, сокеты, каталоги... */
 	/* Для каждого типа файла в структуре stat поле st_mode устанавливает определенное значение. */
 	/*
-	 *  1 = 1 = 1
-	 *  1000 = 8 = 10
-	 *  1000000 = 64 = 100
-		#define        S_IFIFO  0010000   named pipe (fifo)
-		#define        S_IFCHR  0020000   character special
-		#define        S_IFDIR  0040000   directory
-		#define        S_IFBLK  0060000   block special
-		#define        S_IFREG  0100000   regular
-		#define        S_IFLNK  0120000   symbolic link
-		#define        S_IFSOCK 0140000   socket
-		#define        S_IFWHT  0160000   whiteout
+        #define        S_IFIFO  0010000   named pipe (fifo)
+        #define        S_IFCHR  0020000   character special
+        #define        S_IFDIR  0040000   directory
+        #define        S_IFBLK  0060000   block special
+        #define        S_IFREG  0100000   regular
+        #define        S_IFLNK  0120000   symbolic link
+        #define        S_IFSOCK 0140000   socket
+        #define        S_IFWHT  0160000   whiteout
 	*/
 
 	printf("File %s is ", filename);
-	
+
 	/* Занулить биты, которые не относятся к типу файла */
 	mode_t mode = (s->st_mode >> (3 * 4)) << (3 * 4);
-	
+
 	if (mode == S_IFIFO)
 		printf("Pipe");
 	if (mode == S_IFCHR)
@@ -349,7 +347,6 @@ void print_file_type(struct stat *s, char *filename)
 
 int main(int argc, char **argv)
 {
-
 	struct stat s;
 	char *filename = argv[1];
 	stat(filename, &s);
@@ -366,9 +363,17 @@ int main(int argc, char **argv)
 #include <sys/stat.h>
 int lstat(const char *restrict path, struct stat *restrict buf);
 ```
-
+Работает и заполняет ту же самую структуру, что и stat, но в случае, если `path` указывает на символическую ссылку возвращает данные о самой ссылке, а не о файле, на который ссылается ссылка
 
 ### fstat
+
+```c
+#include <sys/stat.h>
+int fstat(int filedes, struct stat *restrict buf);
+```
+Работает и заполняет ту же самую структуру, что и stat, но в качестве первого аргумента принимает не путь до файла, а файловый дескриптор
+
+
 ### unlink
 ### execve
 ```c
