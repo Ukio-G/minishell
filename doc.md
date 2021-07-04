@@ -55,16 +55,19 @@ int main(void)
 
 int main()
 {
-pid_t cpid;
-if (fork()== 0)
-exit(0);           /* terminate child */
-else
-cpid = wait(NULL); /* reaping parent */
-printf("Parent pid = %d\n", getpid());
-printf("Child pid = %d\n", cpid);
-
-return 0;
+    pid_t cpid;
+    if (fork()== 0)
+        exit(0);           /* terminate child */
+    else
+        cpid = wait(NULL); /* reaping parent */
+    printf("Parent pid = %d\n", getpid());
+    printf("Child pid = %d\n", cpid);
+    
+    return 0;
 }
+```
+
+```c
 // C program to demonstrate waitpid()
 #include<stdio.h>
 #include<stdlib.h>
@@ -73,33 +76,32 @@ return 0;
 
 void waitexample()
 {
-int i, stat;
-pid_t pid[5];
-for (i=0; i<5; i++)
-{
-if ((pid[i] = fork()) == 0)
-{
-sleep(1);
-exit(100 + i);
-}
-}
+    int i, stat;
+    pid_t pid[5];
+    for (i=0; i<5; i++)
+    {
+        if ((pid[i] = fork()) == 0)
+        {
+        sleep(1);
+        exit(100 + i);
+        }
+    }
 
-// Using waitpid() and printing exit status
-// of children.
-for (i=0; i<5; i++)
-{
-pid_t cpid = waitpid(pid[i], &stat, 0);
-if (WIFEXITED(stat))
-printf("Child %d terminated with status: %d\n",
-cpid, WEXITSTATUS(stat));
-}
+    // Using waitpid() and printing exit status
+    // of children.
+    for (i=0; i<5; i++)
+    {
+        pid_t cpid = waitpid(pid[i], &stat, 0);
+        if (WIFEXITED(stat))
+            printf("Child %d terminated with status: %d\n", cpid, WEXITSTATUS(stat));
+    }
 }
 
 // Driver code
 int main()
 {
-waitexample();
-return 0;
+    waitexample();
+    return 0;
 }
 
 ```
@@ -186,22 +188,24 @@ return 0;
 Системные вызовы `wait3` и `wait4` аналогичны `waitpid`, но дополнительно возвращают информацию об использовании ресурсов дочернего элемента в структуре, на которую указывает `rusage`.
 Структура `rusage` определяется следующим образом:
 ```c
-struct timeval  ru_utime;    /* user time used */
-struct timeval  ru_stime;    /* system time used */
-long            ru_maxrss;   /* max resident set size */
-long            ru_ixrss;    /* integral shared memory size */
-long            ru_idrss;    /* integral unshared data " */
-long            ru_isrss;    /* integral unshared stack " */
-long            ru_minflt;   /* page reclaims */
-long            ru_majflt;   /* page faults */
-long            ru_nswap;    /* swaps */
-long            ru_inblock;  /* block input operations */
-long            ru_oublock;  /* block output operations */
-long            ru_msgsnd;   /* messages sent */
-long            ru_msgrcv;   /* messages received */
-long            ru_nsignals; /* signals received */
-long            ru_nvcsw;    /* voluntary context switches */
-long            ru_nivcsw;   /* involuntary " */ 
+struct rusage {
+    struct timeval  ru_utime;    /* user time used */
+    struct timeval  ru_stime;    /* system time used */
+    long ru_maxrss;   /* max resident set size */
+    long ru_ixrss;    /* integral shared memory size */
+    long ru_idrss;    /* integral unshared data " */
+    long ru_isrss;    /* integral unshared stack " */
+    long ru_minflt;   /* page reclaims */
+    long ru_majflt;   /* page faults */
+    long ru_nswap;    /* swaps */
+    long ru_inblock;  /* block input operations */
+    long ru_oublock;  /* block output operations */
+    long ru_msgsnd;   /* messages sent */
+    long ru_msgrcv;   /* messages received */
+    long ru_nsignals; /* signals received */
+    long ru_nvcsw;    /* voluntary context switches */
+    long ru_nivcsw;   /* involuntary " */
+};
 ```
 
 ### signal
@@ -229,19 +233,22 @@ int execve(const char * name, const char *argv[], const char *envp[]);
 `argv` - это массив указателей на строки, переданный новой программе в качестве аргументов командной строки. По соглашению первая из этих строк (т.е. `argv[0]`) должна содержать имя файла, связанного с исполняемым файлом. Массив `argv` должен заканчиваться указателем `NULL` (таким образом, в новой программе `argv[argc]` будет `NULL`.)
 
 `envp` - это массив указателей на строки, обычно имеющий форму ключ = значение, которые передаются как среда новой программы. Массив `envp` должен заканчиваться указателем `NULL`.
+
+`hello.c`:
 ```c
-hello.c
 #include<stdio.h>
 int main(int argc, char **argv, char **env)
 {
-printf("%s %s\n", argv[0], argv[1]);
-int i = 0;
-while(env[i])
-printf("%s\n", env[i++]);
-return (0);
+    printf("%s %s\n", argv[0], argv[1]);
+    int i = 0;
+    while(env[i])
+        printf("%s\n", env[i++]);
+    return (0);
 }
+```
 
-execve.c
+`execve.c`:
+```c
 #include<stdio.h>
 #include<stdlib.h>
 #include<unistd.h>
