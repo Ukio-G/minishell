@@ -265,9 +265,47 @@ int main(int argc, char **argv, char **env)
 ### dup
 ### dup2
 ### pipe
-### opendir
-### readdir
-### closedir
+### opendir, readdir, closedir
+```c
+#include <sys/types.h>
+#include <dirent.h>
+
+DIR *opendir(const char *name);
+int closedir(DIR *dirp);
+struct dirent *readdir(DIR *dirp);
+```
+Функция `opendir()` открывает директорию для чтения с именем name и возвращает указатель на directory stream (DIR structure), при ошибке возвращает `NULL`  и код ошибки `errno` устанавливается равной либо `ENOENT` (каталог не найден), либо `ENOMEM` (недостаточно памя­ти). Функция `closedir()` закрывает директорию. Функция `closedir()` в случае успеха возвращает 0 и —1 в противном случае. При неудаче переменная `errno` устанавливается равной `EBADF` (недействительный каталог).
+Функция `readdir()` возвращает следующую структуру `dirent` считанную из файла-директории. При достижении конца списка файлов в директории или возникновении ошибки возвращает `NULL`. Директория сама по себе представляет файл состоящий из специальных записей `dirent`, которые содержат данные о файлах в директории:
+```c
+struct dirent {
+  ino_t          d_ino;       /* inode number */
+  off_t          d_off;       /* offset to the next dirent */
+  unsigned short d_reclen;    /* length of this record */
+  unsigned char  d_type;      /* type of file; not supported
+                                 by all file system types */
+  char           d_name[256]; /* filename */
+};
+```
+Пример использования указанных функций:
+```c
+#include <dirent.h>
+#include <stdio.h>
+
+int main()
+{
+	DIR * dir;
+	struct dirent * dir_info;
+	dir = opendir("/home/dinara/study/dir_example");
+
+	while ((dir_info = readdir(dir)) != NULL) 
+	{
+        printf("%d - %s [%d] %d\n",
+            dir_info->d_ino, dir_info->d_name, dir_info->d_type, dir_info->d_reclen);
+    };    
+    closedir(dir);
+	return (0);
+}
+```
 ### strerror
 ### errno
 ### isatty
