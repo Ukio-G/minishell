@@ -5,30 +5,19 @@
 #include "libft.h"
 #include "get_next_line.h"
 #include "fcntl.h"
+#include <errno.h>
+#include "shell_status.h"
+#include "command.h"
+#include "env.h"
+#include "file_utils.h"
 
-#define HISTORY_PATH "/home/dinara/.minishell-history"
 
-
-char * find_env_by_key(char **envp, char * str)
-{
-    char * result = 0;
-    while (envp && !result) {
-        char ** pair = ft_split(*envp, '=');
-        if (ft_strncmp(pair[0], str, ft_strlen(str)) == 0) {
-            result = ft_strdup(pair[1]);
-            ft_splitline_free(pair);
-        }
-        envp++;
-    }
-    return result;
-}
-
-//char * history_path
 enum HISTORY_ERROR_CODE {
     SUCCESS = 0, NO_HOME_PATH = 1, NO_HISTORY_FILE = 2
 };
-int setup_history(char *home_path) {
 
+int setup_history() {
+	char *home_path = get_status()->home;
     if (!home_path) {
         return NO_HOME_PATH;
     }
@@ -50,10 +39,9 @@ int setup_history(char *home_path) {
     return SUCCESS;
 }
 
-#include <errno.h>
-
-int update_history(char *home_path, char *line) {
-    add_history(line);
+int update_history(char *line) {
+	char *home_path = get_status()->home;
+	add_history(line);
     if (!home_path) {
         return NO_HOME_PATH;
     }
@@ -63,41 +51,66 @@ int update_history(char *home_path, char *line) {
         free(history_file_path);
         return NO_HISTORY_FILE;
     }
-    int retval = write(fd, line, ft_strlen(line));
-    if (retval < 0)
-        printf("%s", strerror(errno));
-    retval = write(fd, "\n", 1);
-    if (retval < 0)
-        printf("%s", strerror(errno));
+    write(fd, line, ft_strlen(line));
+    write(fd, "\n", 1);
     free(history_file_path);
     close(fd);
     return SUCCESS;
 }
 
+void process_command(char * line)
+{
+	char **processed_input = ft_split(line, ' ');
+	t_process_info info;
+	int tokens = ft_split_count(processed_input);
+	if (tokens > 0)
+	{
+		info.bin_path = make_bin_path(processed_input[0]);
+		if (info.bin_path)
+		{
+			//TODO: bin_check(info.bin_path);
+			info.argv = processed_input;
+			info.envp = get_status()->envp;
+			new_process(info);
+		}
+	}
+	ft_split_free(processed_input);
+}
 
+void input_loop()
+{
+	char *line = readline("Readline: ");
+	if (line == 0) {
+		return;
+	} else {
+		char * trimmed = ft_strtrim(line, " \t\n");
+		if (ft_strlen(trimmed) != 0) {
+			update_history(line);
+			rl_redisplay();
+			process_command(line);
+		}
+		free(line);
+		free(trimmed);
+	}
+}
+
+void init_signals()
+{
+
+}
 
 int main(int argc, char ** argv, char **envp)
 {
-
-    char* home_path = find_env_by_key(envp, "HOME");
-    setup_history(home_path);
+	init_signals();
+	init_status(argv, envp);
+	setup_history();
 
     while (1) {
-        char *line = readline("Readline: ");
-        if (line == 0) {
-            break;
-        } else {
-            char * trimmed = ft_strtrim(line, " \t\n");
-            if(ft_strlen(trimmed) != 0) {
-                update_history(home_path, line);
-                rl_redisplay();
-            }
-            printf("|%s|\n", rl_line_buffer);
-            free(line);
-        }
+		input_loop();
     }
 
-    free(home_path);
+
+    free(get_status()->home);
 
 	return 0;
 }

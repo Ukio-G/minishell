@@ -1,0 +1,6 @@
+[submodule "libft"]
+	path = libft
+	url = https://github.com/Ukio-G/libft.git
+[submodule "get-next-line"]
+	path = get-next-line
+	url = https://github.com/Ukio-G/get-next-line.git
