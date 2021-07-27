@@ -13,8 +13,8 @@ t_shell_status *init_status(char **argv, char **envp)
 			free(status.home);
 		}
 		status.home = find_env_by_key("HOME");
-		status.uid = 501;
-		status.gid = 20;
+		status.uid = 1000;
+		status.gid = 1000;
 	}
 	return &status;
 }
