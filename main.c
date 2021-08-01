@@ -165,15 +165,16 @@ void init_signals()
 int main(int argc, char ** argv, char **envp)
 {
 	init_signals();
-	init_status(argv, envp);
+	init_status(argv, copy_env(envp));
+	print_env();
 	setup_history();
 
 	while (1) {
 		input_loop();
 	}
 
-
 	free(get_status()->home);
+
 
 	return 0;
 }
