@@ -1,0 +1,8 @@
+//
+// Created by savinykh-n on 31.07.2021.
+//
+
+#ifndef MINISHELL_SIGNALS_HANDLER_H
+#define MINISHELL_SIGNALS_HANDLER_H
+
+#endif //MINISHELL_SIGNALS_HANDLER_H

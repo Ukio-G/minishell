@@ -1,0 +1,10 @@
+//
+// Created by savinykh-n on 31.07.2021.
+//
+
+#ifndef MINISHELL_ERROR_PRINTER_H
+#define MINISHELL_ERROR_PRINTER_H
+
+#define MINISHELL_MEMORY_ERROR 250
+
+#endif //MINISHELL_ERROR_PRINTER_H

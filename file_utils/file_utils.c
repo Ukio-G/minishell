@@ -1,5 +1,5 @@
 #include "permission.h"
-#include "shell_status.h"
+#include "../shell_status.h"
 #include <sys/stat.h>
 
 int is_file_exist(char *abs_filename)

@@ -8,8 +8,11 @@
 #include <errno.h>
 #include "shell_status.h"
 #include "command.h"
-#include "env.h"
-#include "file_utils.h"
+#include "env/env.h"
+#include "file_utils/file_utils.h"
+#include "pipes/pipes.h"
+#include "processes/processes.h"
+#include "preprocessor/preprocessor.h"
 
 
 enum HISTORY_ERROR_CODE {
@@ -58,28 +61,88 @@ int update_history(char *line) {
     return SUCCESS;
 }
 
-void process_command(char * line)
+
+t_process_info create_process_info(char * command)
 {
-	char **processed_input = ft_split(line, ' ');
+	char **processed_input = ft_split(command, SPECIAL_ARGS_DELIMITER);
+	char *bin_path;
 	t_process_info info;
 	int tokens = ft_split_count(processed_input);
 	if (tokens > 0)
 	{
-		info.bin_path = make_bin_path(processed_input[0]);
-		if (info.bin_path)
+		bin_path = make_bin_path(processed_input[0]);
+		if (bin_path)
 		{
 			//TODO: bin_check(info.bin_path);
-			info.argv = processed_input;
-			info.envp = get_status()->envp;
-			new_process(info);
+			info = new_process_info(bin_path, processed_input, get_status()->envp);
+		}
+		else
+		{
+			// Print not found + clear memory
 		}
 	}
-	ft_split_free(processed_input);
+	return info;
+}
+
+t_ft_vector create_process_info_set(t_ft_vector commands_text)
+{
+	t_process_info tmp;
+	t_ft_vector result;
+
+	ft_vector_init(&result, sizeof(t_process_info));
+	while (ft_vector_iter(&commands_text))
+	{
+		tmp = create_process_info(*((char**)ft_vector_iter_value(&commands_text)));
+		ft_vector_add(&result, &tmp);
+	}
+	return result;
+}
+
+char *process_input(char *raw_input)
+{
+	return preprocess(raw_input);
+}
+
+t_ft_vector create_process_string_set(char *processed_input)
+{
+	t_ft_vector result;
+	char **splitted_by_pipe;
+
+	splitted_by_pipe = ft_split(processed_input, SPECIAL_PIPE);
+	ft_vector_init(&result, sizeof(char*));
+	if (!splitted_by_pipe)
+	{
+		printf("Malloc error\n");
+		exit(1);
+	}
+
+	while (*splitted_by_pipe)
+	{
+		ft_vector_add(&result, splitted_by_pipe);
+		splitted_by_pipe++;
+	}
+	return result;
+}
+
+void process_commands(char * line)
+{
+	get_status()->processed_input = process_input(line);
+	get_status()->process_string_set = create_process_string_set(get_status()->processed_input);
+
+	get_status()->pipes_set = create_pipes_set(get_status()->process_string_set);
+	get_status()->process_info_set = create_process_info_set(get_status()->process_string_set);
+	bind_process_with_pipes(get_status()->process_info_set, get_status()->pipes_set);
+
+	create_process_set(get_status()->process_info_set);
+	wait_all_processes(get_status()->process_info_set);
 }
 
 void input_loop()
 {
-	char *line = readline("Readline: ");
+	char *line;
+
+	line = readline("Readline: ");
+	get_status()->raw_input = line;
 	if (line == 0) {
 		return;
 	} else {
@@ -87,7 +150,7 @@ void input_loop()
 		if (ft_strlen(trimmed) != 0) {
 			update_history(line);
 			rl_redisplay();
-			process_command(line);
+			process_commands(line);
 		}
 		free(line);
 		free(trimmed);
@@ -105,12 +168,12 @@ int main(int argc, char ** argv, char **envp)
 	init_status(argv, envp);
 	setup_history();
 
-    while (1) {
+	while (1) {
 		input_loop();
-    }
+	}
 
 
-    free(get_status()->home);
+	free(get_status()->home);
 
 	return 0;
 }

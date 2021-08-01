@@ -1,7 +1,7 @@
 //
 // Created by savinykh-n on 25.07.2021.
 //
-#include "shell_status.h"
+#include "../shell_status.h"
 #include "libft.h"
 
 char * find_env_by_key(char * str)
