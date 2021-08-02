@@ -2,20 +2,20 @@
 #include "libft.h"
 #include "../errors_printer/error_printer.h"
 
+void find_substr(char* substr[2], char *start_str, char* escape_chars)
+{
+	(substr)[0] = ft_strpbrk(start_str, escape_chars);
+	if ((substr)[0])
+	{ 
+		(substr)[1] = ft_strchr((substr)[0] + 1, *(substr)[0]);
+	}
+}
+
 int is_escaped(char *char_ptr, char *start_str, char* escape_chars)
 {
-	char *substr[2];
+	char* substr[2];
+	find_substr(substr, start_str, escape_chars);
 
-	substr[0] = ft_strpbrk(start_str, escape_chars);
-	if (substr[0])
-	{
-		substr[1] = ft_strchr(substr[0] + 1, *substr[0]);
-		if (!substr[1])
-		{
-			// TODO: parser error - stop minishell
-			exit(100);
-		}
-	}
 	if (substr[0] && substr[1])
 	{
 		if (char_ptr < substr[0])
@@ -85,6 +85,22 @@ char* preprocess_spaces(char *source)
 	return result;
 }
 
+char **preprocess_arguments(char **argv)
+{
+	int argc_count;
+	char ** result;
+	int i = 0;
+
+	argc_count = ft_split_count(argv);
+	result = malloc((argc_count + 1) * sizeof(char*));
+	while (argv[i])
+	{
+		result[i] = ft_strtrim(argv[i], "\'\"");
+		i++;
+	}
+	return result;
+}
+
 char* preprocess_variables(char *source)
 {
 
@@ -101,10 +117,10 @@ char *preprocess(char *raw_input)
 //	variables = preprocess_variables(spaces);
 
 	free(pipes);
-//	free(spaces);
-//	free(variables);
+//  free(spaces);
 //	return variables;
 
+	printf("%s result %s\n", __func__, spaces);
 	return spaces;
 }
 

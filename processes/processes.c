@@ -8,17 +8,18 @@
 #include "processes.h"
 #include "../shell_status.h"
 #include "../pipes/pipes.h"
-
+#include "../preprocessor/preprocessor.h"
 
 void print_process(t_process_info info)
 {
-	printf("bin %s, in %d, out %d\n", info.bin_path, info.in_d, info.out_d);
+	printf("bin %s %i, in %d, out %d\n", info.bin_path, (int)info.pid ,info.in_d, info.out_d);
 }
 
 
 void create_process_set(t_ft_vector process_info_set)
 {
 	t_process_info *info;
+	printf("process_info_set size %i\n", process_info_set.size);
 	while (ft_vector_iter(&process_info_set))
 	{
 		info = ft_vector_iter_value(&process_info_set);
@@ -79,7 +80,7 @@ t_process_info new_process_info(char *path, char **argv, char **envp)
 {
 	t_process_info result;
 	result.bin_path = path;
-	result.argv = argv;
+	result.argv = preprocess_arguments(argv);
 	result.envp = envp;
 	result.in_d = NOT_SET;
 	result.out_d = NOT_SET;

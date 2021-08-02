@@ -13,6 +13,6 @@ char			*preprocess(char *raw_input);
 char			*preprocess_spaces(char *source);
 char			*preprocess_pipes(char *source);
 int				is_escaped(char *char_ptr, char *start_str, char* escape_chars);
-
+char			**preprocess_arguments(char **argv);
 
 #endif

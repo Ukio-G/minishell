@@ -75,6 +75,7 @@ t_process_info create_process_info(char * command)
 		{
 			//TODO: bin_check(info.bin_path);
 			info = new_process_info(bin_path, processed_input, get_status()->envp);
+			ft_split_free(processed_input);
 		}
 		else
 		{
@@ -118,6 +119,7 @@ t_ft_vector create_process_string_set(char *processed_input)
 
 	while (*splitted_by_pipe)
 	{
+		printf("__\n");
 		ft_vector_add(&result, splitted_by_pipe);
 		splitted_by_pipe++;
 	}
@@ -166,7 +168,7 @@ int main(int argc, char ** argv, char **envp)
 {
 	init_signals();
 	init_status(argv, copy_env(envp));
-	print_env();
+	
 	setup_history();
 
 	while (1) {
@@ -174,7 +176,5 @@ int main(int argc, char ** argv, char **envp)
 	}
 
 	free(get_status()->home);
-
-
 	return 0;
 }
