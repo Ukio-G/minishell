@@ -119,7 +119,6 @@ t_ft_vector create_process_string_set(char *processed_input)
 
 	while (*splitted_by_pipe)
 	{
-		printf("__\n");
 		ft_vector_add(&result, splitted_by_pipe);
 		splitted_by_pipe++;
 	}
