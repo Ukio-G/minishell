@@ -163,12 +163,19 @@ void init_signals()
 
 }
 
+
+
+
+void test_preprocessor();
+
 int main(int argc, char ** argv, char **envp)
 {
 	init_signals();
 	init_status(argv, copy_env(envp));
 	
 	setup_history();
+
+    test_preprocessor();
 
 	while (1) {
 		input_loop();

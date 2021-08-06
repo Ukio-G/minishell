@@ -18,6 +18,7 @@ add_executable(minishell
         errors_printer/error_printer.c
         signals/signals_handler.c
         preprocessor/preprocessor.c
+        test_preprocessor.c
         )
 
 include_directories(libft get-next-line)

@@ -1,4 +1,4 @@
-#include <printf.h>
+#include <stdio.h>
 #include "preprocessor.h"
 #include "libft.h"
 #include "../errors_printer/error_printer.h"
@@ -119,6 +119,33 @@ int variable_length(char *start_position)
 	return (int)(last_position - start_position);
 }
 
+/*
+ * Return new allocated memory, with only variable name (without $ character)
+ * Obtains 2 arguments - start string position and dollar position
+ * If variable escaped - return 0
+ * example:
+ *
+ * la -lah $USER
+ * |       |
+ * | dollar_position
+ * |
+ * start_position
+ *
+ * return string "USER" in new allocated memory
+ */
+char* variable_name(char *start_position, char *dollar_position)
+{
+    char	*result;
+    int		length;
+
+    if (is_escaped(dollar_position, start_position, "'"))
+        return 0;
+    length = variable_length(dollar_position);
+    result = ft_calloc(length, 1);
+    ft_slice_cpy(result, dollar_position + 1, dollar_position + length - 1);
+    return result;
+}
+
 int variables_length(char *start_position)
 {
 	int		var_length;
@@ -158,7 +185,7 @@ int			expanded_variables_length(char *start_position)
 	result = 0;
 	while (substring[0])
 	{
-		substring[1] = ft_strpbrk2(substring[0], "\02\"");
+		substring[1] = ft_strpbrk2(substring[0], "\02\"$");
 		if (!is_escaped(substring[0], start_position, "'"))
 		{
 			len = substring[1] - substring[0] - 1;
@@ -197,18 +224,30 @@ int expanded_string_length(char *source)
 	return no_vars_length + expanded_vars_length + 1;
 }
 
-char* variable_name(char *start_position, char *dollar_position)
+void expand_variable(char **source, char *pos[3], char *v[2])
 {
-	char	*result;
-	int		length;
+    // Copy before dollar
+    ft_memcpy(pos[WRITE_POS], pos[READ_POS], pos[DOLLAR_POS] - pos[READ_POS]);
 
-	if (is_escaped(dollar_position, start_position, "'"))
-		return 0;
-	length = variable_length(dollar_position);
-	result = ft_calloc(length, 1);
-	ft_slice_cpy(result, dollar_position + 1, dollar_position + length - 1);
-	return result;
+    // Move write position
+    pos[WRITE_POS] += (pos[DOLLAR_POS] - pos[READ_POS]);
+
+    // Determinate pair key => value
+    v[VARIABLE_NAME] = variable_name(*source, pos[DOLLAR_POS]);
+    v[VARIABLE_VALUE] = find_env_by_key(v[VARIABLE_NAME]);
+
+    // Copy variable value
+    ft_memcpy(pos[WRITE_POS], v[VARIABLE_VALUE], ft_strlen(v[VARIABLE_VALUE]));
+
+    // Move read and write position
+    pos[WRITE_POS] += ft_strlen(v[VARIABLE_VALUE]);
+    pos[READ_POS] += ft_strlen(v[VARIABLE_NAME]) + (pos[DOLLAR_POS] - pos[READ_POS]) + 1;
+
+    // Free used resources
+    free(v[VARIABLE_NAME]);
+    free(v[VARIABLE_VALUE]);
 }
+
 
 char* preprocess_variables(char *source)
 {
@@ -227,26 +266,15 @@ char* preprocess_variables(char *source)
 	else
 		while (*pos[DOLLAR_POS])
 		{
-			// Copy before dollar
-			ft_memcpy(pos[WRITE_POS], pos[READ_POS], pos[DOLLAR_POS] - pos[READ_POS]);
-
-			// Move write position
-			pos[WRITE_POS] += (pos[DOLLAR_POS] - pos[READ_POS]);
-
-			// Determinate pair key => value
-			v[VARIABLE_NAME] = variable_name(source, pos[DOLLAR_POS]);
-			v[VARIABLE_VALUE] = find_env_by_key(v[VARIABLE_NAME]);
-
-			// Copy variable value
-			ft_memcpy(pos[WRITE_POS], v[VARIABLE_VALUE], ft_strlen(v[VARIABLE_VALUE]));
-
-			// Move read and write position
-			pos[WRITE_POS] += ft_strlen(v[VARIABLE_VALUE]);
-			pos[READ_POS] += ft_strlen(v[VARIABLE_NAME]) + (pos[DOLLAR_POS] - pos[READ_POS]) + 1;
-
-			// Free used resources
-			free(v[VARIABLE_NAME]);
-			free(v[VARIABLE_VALUE]);
+		    if (!is_escaped(pos[DOLLAR_POS], source, "\'"))
+		        expand_variable(&source, pos, v);
+		    else
+		    {
+		        pos[DOLLAR_POS] = ft_strchr2(pos[DOLLAR_POS] + 1, '$');
+		        if (*pos[DOLLAR_POS] == 0)
+		            ft_memcpy(pos[WRITE_POS], pos[READ_POS], pos[DOLLAR_POS] - pos[READ_POS]);
+                continue;
+		    }
 
 			// Update dollar pos
 			pos[DOLLAR_POS] = ft_strchr2(pos[READ_POS], '$');
