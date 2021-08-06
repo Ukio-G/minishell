@@ -174,35 +174,27 @@ int variables_length(char *start_position)
 
 int			expanded_variables_length(char *start_position)
 {
-	char	*substring[2];
-	char	*tmp[2];
-	size_t	len;
+	char	*dollar_position;
 	int		result;
+	int     variable_len;
+	char    *v[2];
 
 	printf("start_position %s",start_position);
 
-	substring[0] = ft_strchr(start_position, '$');
+	dollar_position = ft_strchr(start_position, '$');
 	result = 0;
-	while (substring[0])
+	while (dollar_position)
 	{
-		substring[1] = ft_strpbrk2(substring[0], "\02\"$");
-		if (!is_escaped(substring[0], start_position, "'"))
+	    if (!is_escaped(dollar_position, start_position, "'"))
 		{
-			len = substring[1] - substring[0] - 1;
-			tmp[0] = ft_strndup(substring[0] + 1, len);
-			tmp[1] = find_env_by_key(tmp[0]);
-			result += (int) ft_strlen(tmp[1]);
-#ifdef DEBUG_PRINT
-			printf("tmp[0] = %s tmp[1] = %s, len = %i\n", tmp[0], tmp[1], len);
-#endif
-			free(tmp[0]);
-			free(tmp[1]);
+	        v[VARIABLE_NAME] = variable_name(start_position, dollar_position);
+		    v[VARIABLE_VALUE] = find_env_by_key(v[VARIABLE_NAME]);
+		    variable_len = (int) ft_strlen(v[VARIABLE_VALUE]);
+		    result += variable_len;
+			free(v[VARIABLE_NAME]);
+			free(v[VARIABLE_VALUE]);
 		}
-		substring[0] = ft_strchr(substring[1], '$');
-#ifdef DEBUG_PRINT
-		printf("substring[0] = %s substring[1] = %s\n", substring[0], (*substring[1]) ? (substring[1]) : 0);
-#endif
-
+	    dollar_position = ft_strchr(dollar_position + variable_len, '$');
 	}
 	return result;
 }
