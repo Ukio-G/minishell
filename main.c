@@ -8,8 +8,9 @@
 #include <errno.h>
 #include "shell_status.h"
 #include "command.h"
-#include "env.h"
+#include "env_utils.h"
 #include "file_utils.h"
+#include "basic_shell.h"
 
 
 enum HISTORY_ERROR_CODE {
@@ -66,6 +67,43 @@ void process_command(char * line)
 	if (tokens > 0)
 	{
 		info.bin_path = make_bin_path(processed_input[0]);
+        if (ft_strncmp("echo", processed_input[0], ft_strlen(processed_input[0])) == 0)
+        {
+            echo(processed_input);
+            ft_split_free(processed_input);
+            return;
+        }
+        if (ft_strncmp("cd", processed_input[0], ft_strlen(processed_input[0])) == 0)
+        {
+            cd(processed_input);
+            ft_split_free(processed_input);
+            return;
+        }
+        if (ft_strncmp("unset", processed_input[0], ft_strlen(processed_input[0])) == 0)
+        {
+            unset(processed_input);
+            ft_split_free(processed_input);
+            return;
+        }
+        if (ft_strncmp("pwd", processed_input[0], ft_strlen(processed_input[0])) == 0)
+        {
+            pwd();
+            ft_split_free(processed_input);
+            return;
+        }
+        if (ft_strncmp("env", processed_input[0], ft_strlen(processed_input[0])) == 0)
+        {
+            env();
+            ft_split_free(processed_input);
+            return;
+        }
+        if (ft_strncmp("export", processed_input[0], ft_strlen(processed_input[0])) == 0)
+        {
+            export(processed_input);
+            ft_split_free(processed_input);
+            return;
+        }
+
 		if (info.bin_path)
 		{
 			//TODO: bin_check(info.bin_path);
@@ -99,18 +137,21 @@ void init_signals()
 
 }
 
+
 int main(int argc, char ** argv, char **envp)
 {
 	init_signals();
 	init_status(argv, copy_env(envp));
-	print_env();
+	//print_env(get_status()->envp);
+
+	print_env(envp);
 
 
-//	setup_history();
-//
-//    while (1) {
-//		input_loop();
-//    }
+	setup_history();
+
+    while (1) {
+		input_loop();
+    }
 
 
     free(get_status()->home);
