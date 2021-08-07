@@ -16,7 +16,7 @@ char *find_env_by_key(char *str)
 	while (envp && *envp && !result)
 	{
 		char **pair = ft_split(*envp, '=');
-		if (ft_strncmp(pair[0], str, ft_strlen(str)) == 0)
+		if (ft_strncmp(pair[0], str, ft_strlen(str) + 1) == 0)
 		{
 			result = ft_strdup(pair[1]);
 			ft_split_free(pair);

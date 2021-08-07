@@ -115,7 +115,7 @@ int variable_length(char *start_position)
 {
 	char	*last_position;
 
-	last_position = ft_strpbrk2(start_position + 1, "\02\"$");
+	last_position = ft_strpbrk2(start_position + 1, "\02\"$/");
 	return (int)(last_position - start_position);
 }
 
@@ -146,6 +146,16 @@ char* variable_name(char *start_position, char *dollar_position)
     return result;
 }
 
+
+/*
+ * Return length of all variables length with '$' character in string, start string
+ * position passed in start_position argument. Escaped variables don't handle.
+ * examples:
+ * ls $USER -> 5
+ * ls $USER$USER -> 10
+ * ls $USER$USER '$USER' -> 10
+ * ls '$USER' -> 0
+ */
 int variables_length(char *start_position)
 {
 	int		var_length;
@@ -179,8 +189,7 @@ int			expanded_variables_length(char *start_position)
 	int     variable_len;
 	char    *v[2];
 
-	printf("start_position %s",start_position);
-
+	DEBUG_PRINT_MACRO("start_position %s\n",start_position);
 	dollar_position = ft_strchr(start_position, '$');
 	result = 0;
 	while (dollar_position)
@@ -189,15 +198,25 @@ int			expanded_variables_length(char *start_position)
 		{
 	        v[VARIABLE_NAME] = variable_name(start_position, dollar_position);
 		    v[VARIABLE_VALUE] = find_env_by_key(v[VARIABLE_NAME]);
-		    variable_len = (int) ft_strlen(v[VARIABLE_VALUE]);
-		    result += variable_len;
+		    variable_len = (int) ft_strlen(v[VARIABLE_NAME]);
+		    result += (int) ft_strlen(v[VARIABLE_VALUE]);
 			free(v[VARIABLE_NAME]);
 			free(v[VARIABLE_VALUE]);
 		}
+		dollar_position += (variable_len == 0);
 	    dollar_position = ft_strchr(dollar_position + variable_len, '$');
 	}
+	DEBUG_PRINT_MACRO("%s result %i\n",__func__, result);
 	return result;
 }
+
+/*
+ * Return size of new string, after expanding all variables, without null-terminated character
+ * example:
+ * $USER is "atawana"
+ * source = "ls -lah $USER"
+ * result: 15
+ */
 
 int expanded_string_length(char *source)
 {
@@ -211,9 +230,9 @@ int expanded_string_length(char *source)
 	expanded_vars_length = expanded_variables_length(source);
 	no_vars_length = input_length - vars_length;
 
-	printf("expanded_string_length = %i\n", no_vars_length + expanded_vars_length);
+	DEBUG_PRINT_MACRO("expanded_string_length = %i\n", no_vars_length + expanded_vars_length);
 
-	return no_vars_length + expanded_vars_length + 1;
+	return no_vars_length + expanded_vars_length;
 }
 
 void expand_variable(char **source, char *pos[3], char *v[2])
@@ -247,7 +266,7 @@ char* preprocess_variables(char *source)
 	char	*pos[3];
 	char	*v[2];
 
-	result = ft_calloc(1, (size_t)expanded_string_length(source));
+	result = ft_calloc(1, (size_t)expanded_string_length(source) + 2);
 	pos[WRITE_POS] = result;
 	pos[READ_POS] = source;
 	pos[DOLLAR_POS] = ft_strchr2(source, '$');
@@ -275,7 +294,7 @@ char* preprocess_variables(char *source)
 			if (*pos[DOLLAR_POS] == 0)
 				ft_memcpy(pos[WRITE_POS], pos[READ_POS], pos[DOLLAR_POS] - pos[READ_POS]);
 		}
-	printf("variables expanded |%s|\n", result);
+	DEBUG_PRINT_MACRO("variables expanded |%s|\n", result);
 	return result;
 }
 
