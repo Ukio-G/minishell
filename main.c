@@ -103,6 +103,12 @@ void process_command(char * line)
             ft_split_free(processed_input);
             return;
         }
+		if (ft_strncmp("exit", processed_input[0], ft_strlen(processed_input[0])) == 0)
+		{
+			ft_exit();
+			ft_split_free(processed_input);
+			return;
+		}
 
 		if (info.bin_path)
 		{
@@ -124,7 +130,7 @@ void input_loop()
 		char * trimmed = ft_strtrim(line, " \t\n");
 		if (ft_strlen(trimmed) != 0) {
 			update_history(line);
-			rl_redisplay();
+//			rl_redisplay();
 			process_command(line);
 		}
 		free(line);
@@ -144,7 +150,7 @@ int main(int argc, char ** argv, char **envp)
 	init_status(argv, copy_env(envp));
 	//print_env(get_status()->envp);
 
-	print_env(envp);
+	//print_env(envp);
 
 
 	setup_history();

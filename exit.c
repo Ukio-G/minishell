@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lweeper <lweeper@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/08 12:45:35 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/08 12:49:24 by lweeper          ###   ########.fr       */
+/*   Created: 2021/08/08 17:21:09 by lweeper           #+#    #+#             */
+/*   Updated: 2021/08/08 17:21:25 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "basic_shell.h"
 
-void	pwd(void)
+void	ft_exit(void)
 {
-	char	*buffer_pwd;
-
-	buffer_pwd = getcwd(NULL, 0);
-	ft_putstr_fd(buffer_pwd, 1);
-	ft_putstr_fd("\n", 1);
-	if (buffer_pwd)
-		free(buffer_pwd);
+	ft_putstr_fd("exit\n", 1);
+	exit(0);
 	return ;
 }
