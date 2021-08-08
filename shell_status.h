@@ -18,6 +18,8 @@ typedef struct		s_shell_status
 	t_ft_vector		process_info_set;
 	int				uid;
 	int				gid;
+	int 			redirect_fd;
+	int 			is_double_input_redirected;
 }					t_shell_status;
 
 

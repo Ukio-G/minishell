@@ -24,6 +24,7 @@
 #define TEST_CASE_RESULT_9 "ls\02/Users/atawana/../atawana"
 #define TEST_CASE_RESULT_10 "ls\02atawana\02atawana\02$USERatawana"
 
+
 void print_binary_string(char * str)
 {
 	while (*str)
@@ -71,6 +72,75 @@ void compare_length(int a, int b, int line, char *s)
 	}
 }
 
+void compare_removed_string(char *str1, char *str2, int line)
+{
+	if (ft_strncmp(str1, str2, ft_strlen(str2) + 1) == 0)
+	{
+		printf("\033[0;32m");
+		printf("|%s| string removed correctly\n", str1);
+		printf("\033[0m");
+	}
+	else
+	{
+		printf("\033[0;31m");
+		printf("On line %i\n", line);
+		printf("string removed incorrected. \nPreprocessed: |%s|\nExpected: |%s|\n", str1, str2);
+		print_binary_string(str1);
+		print_binary_string(str2);
+		printf("\033[0m");
+		exit(1);
+	}
+}
+
+void compare_last_find_redirection(char *redirections[3], char *source, int out_idx_expected, int in_idx_expected, int line)
+{
+	int out_idx;
+	int in_idx;
+
+	out_idx = (redirections[LAST_OUT_REDIRECT]) ? (int)(redirections[LAST_OUT_REDIRECT] - source) : -1;
+	in_idx = (redirections[LAST_IN_REDIRECT]) ? (int)(redirections[LAST_IN_REDIRECT] - source) : -1;
+
+	if ((out_idx == out_idx_expected) && (in_idx == in_idx_expected))
+	{
+		printf("\033[0;32m");
+		printf("Ok! Out idx: %i; In idx: %i\n", out_idx, in_idx);
+		printf("\033[0m");
+	}
+	else
+	{
+		printf("\033[0;31m");
+		printf("Something wrong! Out: %i (expected: %i); In %i (expected %i)\n", out_idx, out_idx_expected, in_idx, in_idx_expected);
+		printf("String: %s\n", source);
+		print_binary_string(source);
+		printf("\033[0m");
+		exit(1);
+	}
+}
+
+
+void compare_redirect_arguments(char *redirections[3], char *source, char *out_expected, char *in_expected, int line)
+{
+	char out_buf[512];
+	char in_buf[512];
+	char *out_arg[2];
+	char *in_arg[2];
+
+	ft_memset(out_buf, 0, 512);
+	ft_memset(in_buf, 0, 512);
+
+	if (redirections[LAST_OUT_REDIRECT])
+	{
+		out_arg[1] =
+		out_arg[1] = rarg_end(redirections[LAST_OUT_REDIRECT], source);
+		ft_slice_cpy(out_buf,redirections[LAST_OUT_REDIRECT], )
+	}
+
+	if (redirections[LAST_IN_REDIRECT])
+	{
+
+	}
+}
+
 void test_preprocessor_length_detector()
 {
 	char	*pipes;
@@ -89,9 +159,47 @@ void test_preprocessor_length_detector()
 	// PREPROCESSOR_LENGTH_TEST_CASE(10, __LINE__)
 }
 
+void test_remove_string()
+{
+	char *expected;
+	char *preprocessed;
+	char *substring[2];
+
+	REMOVE_STRING_TEST_CASE(1, __LINE__)
+	REMOVE_STRING_TEST_CASE(2, __LINE__)
+	REMOVE_STRING_TEST_CASE(3, __LINE__)
+	REMOVE_STRING_TEST_CASE(4, __LINE__)
+	REMOVE_STRING_TEST_CASE(5, __LINE__)
+	REMOVE_STRING_TEST_CASE(6, __LINE__)
+}
+
+
+void test_find_redirection()
+{
+	char *redirections[3];
+	char *source;
+
+	TEST_FIND_LAST_REDIRECTION_CASE(1, __LINE__)
+	TEST_FIND_LAST_REDIRECTION_CASE(2, __LINE__)
+	TEST_FIND_LAST_REDIRECTION_CASE(3, __LINE__)
+	TEST_FIND_LAST_REDIRECTION_CASE(4, __LINE__)
+	TEST_FIND_LAST_REDIRECTION_CASE(5, __LINE__)
+	TEST_FIND_LAST_REDIRECTION_CASE(6, __LINE__)
+}
+
+void test_last_redirections_args()
+{
+
+}
+
+
 void test_preprocessor()
 {
     char *result;
+
+	test_last_redirections_args();
+	test_find_redirection();
+	test_remove_string();
 	test_preprocessor_length_detector();
 	PREPROCESSOR_TEST_CASE(1, __LINE__)
 	PREPROCESSOR_TEST_CASE(2, __LINE__)
@@ -102,7 +210,7 @@ void test_preprocessor()
 	PREPROCESSOR_TEST_CASE(7, __LINE__)
 	PREPROCESSOR_TEST_CASE(8, __LINE__)
 	PREPROCESSOR_TEST_CASE(9, __LINE__)
-	PREPROCESSOR_TEST_CASE(10, __LINE__)
+//	PREPROCESSOR_TEST_CASE(10, __LINE__)
 }
 
 

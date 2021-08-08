@@ -19,8 +19,9 @@ add_executable(minishell
         signals/signals_handler.c
         preprocessor/preprocessor.c
         test_preprocessor.c
+        redirection/redirection.c
         )
 
-include_directories(libft get-next-line)
+include_directories(libft get-next-line .)
 
 target_link_libraries(minishell PUBLIC readline ${CMAKE_SOURCE_DIR}/libft.a ${CMAKE_SOURCE_DIR}/get_next_line.a)
