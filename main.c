@@ -164,8 +164,6 @@ void init_signals()
 }
 
 
-
-
 void test_preprocessor();
 
 int main(int argc, char ** argv, char **envp)
