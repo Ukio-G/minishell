@@ -13,16 +13,16 @@
 #define TEST_CASE_9 "ls $HOME/../$USER"
 #define TEST_CASE_10 "ls $USER $USER '$USER'$USER"
 
-#define TEST_CASE_RESULT_1 "ls\02-lah\02atawana"
-#define TEST_CASE_RESULT_2 "ls\02-lah\02atawana"
-#define TEST_CASE_RESULT_3 "ls\02-lah\02atawanaatawana"
-#define TEST_CASE_RESULT_4 "ls\02-lah\02atawana\02\'$USER\'"
-#define TEST_CASE_RESULT_5 "ls\02-lah\02atawana\02\'$USER\'\02\'$USER\'\02\'$USER\'"
-#define TEST_CASE_RESULT_6 "ls\02-lah\02atawana\02\'$USER\'\02\"atawana 123\"\02atawana"
-#define TEST_CASE_RESULT_7 "ls\02-lah\02atawana\02\"atawana\""
+#define TEST_CASE_RESULT_1 "ls\02-lah\02" USER_MACRO ""
+#define TEST_CASE_RESULT_2 "ls\02-lah\02" USER_MACRO ""
+#define TEST_CASE_RESULT_3 "ls\02-lah\02" USER_MACRO "" USER_MACRO ""
+#define TEST_CASE_RESULT_4 "ls\02-lah\02" USER_MACRO "\02\'$USER\'"
+#define TEST_CASE_RESULT_5 "ls\02-lah\02" USER_MACRO "\02\'$USER\'\02\'$USER\'\02\'$USER\'"
+#define TEST_CASE_RESULT_6 "ls\02-lah\02" USER_MACRO "\02\'$USER\'\02\"" USER_MACRO " 123\"\02" USER_MACRO ""
+#define TEST_CASE_RESULT_7 "ls\02-lah\02" USER_MACRO "\02\"" USER_MACRO "\""
 #define TEST_CASE_RESULT_8 "ls\02-lah\02\'$USER\'"
-#define TEST_CASE_RESULT_9 "ls\02/Users/atawana/../atawana"
-#define TEST_CASE_RESULT_10 "ls\02atawana\02atawana\02$USERatawana"
+#define TEST_CASE_RESULT_9 "ls\02" HOME_MACRO "" USER_MACRO "/../" USER_MACRO ""
+#define TEST_CASE_RESULT_10 "ls\02" USER_MACRO "\02" USER_MACRO "\02$USER" USER_MACRO ""
 
 
 void print_binary_string(char * str)
@@ -128,16 +128,22 @@ void compare_redirect_arguments(char *redirections[3], char *source, char *out_e
 	ft_memset(out_buf, 0, 512);
 	ft_memset(in_buf, 0, 512);
 
-	if (redirections[LAST_OUT_REDIRECT])
+	if (redirections[LAST_OUT_REDIRECT] && out_expected)
 	{
-		out_arg[1] =
+	    out_arg[0] = rarg_start(redirections[LAST_OUT_REDIRECT]);
 		out_arg[1] = rarg_end(redirections[LAST_OUT_REDIRECT], source);
-		ft_slice_cpy(out_buf,redirections[LAST_OUT_REDIRECT], )
+		ft_slice_cpy(out_buf,out_arg[0], out_arg[1]);
+        printf("stdout compare:\n");
+		compare_string(out_buf, out_expected, line);
 	}
 
-	if (redirections[LAST_IN_REDIRECT])
+	if (redirections[LAST_IN_REDIRECT] && in_expected)
 	{
-
+	    in_arg[0] = rarg_start(redirections[LAST_IN_REDIRECT]);
+	    in_arg[1] = rarg_end(redirections[LAST_IN_REDIRECT], source);
+	    ft_slice_cpy(in_buf,in_arg[0], in_arg[1]);
+	    printf("stdin compare:\n");
+	    compare_string(in_buf, in_expected, line);
 	}
 }
 
@@ -179,17 +185,38 @@ void test_find_redirection()
 	char *redirections[3];
 	char *source;
 
+	char *pipes;
+	char *spaces;
+	char *variables;
+
 	TEST_FIND_LAST_REDIRECTION_CASE(1, __LINE__)
 	TEST_FIND_LAST_REDIRECTION_CASE(2, __LINE__)
 	TEST_FIND_LAST_REDIRECTION_CASE(3, __LINE__)
 	TEST_FIND_LAST_REDIRECTION_CASE(4, __LINE__)
 	TEST_FIND_LAST_REDIRECTION_CASE(5, __LINE__)
 	TEST_FIND_LAST_REDIRECTION_CASE(6, __LINE__)
+	TEST_FIND_LAST_REDIRECTION_CASE(7, __LINE__)
 }
 
 void test_last_redirections_args()
 {
+    char *redirections[3];
+    char *source;
 
+    char *pipes;
+    char *spaces;
+    char *variables;
+
+    char *out;
+    char *in;
+
+    TEST_LAST_REDIRECTIONS_ARGUMENT(1, __LINE__)
+    TEST_LAST_REDIRECTIONS_ARGUMENT(2, __LINE__)
+    TEST_LAST_REDIRECTIONS_ARGUMENT(3, __LINE__)
+    TEST_LAST_REDIRECTIONS_ARGUMENT(4, __LINE__)
+    TEST_LAST_REDIRECTIONS_ARGUMENT(5, __LINE__)
+    TEST_LAST_REDIRECTIONS_ARGUMENT(6, __LINE__)
+    TEST_LAST_REDIRECTIONS_ARGUMENT(7, __LINE__)
 }
 
 
@@ -197,8 +224,8 @@ void test_preprocessor()
 {
     char *result;
 
-	test_last_redirections_args();
 	test_find_redirection();
+	test_last_redirections_args();
 	test_remove_string();
 	test_preprocessor_length_detector();
 	PREPROCESSOR_TEST_CASE(1, __LINE__)

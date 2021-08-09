@@ -268,6 +268,12 @@ int expanded_variables_length(char *start_position)
 			free(v[VARIABLE_NAME]);
 			free(v[VARIABLE_VALUE]);
 		}
+		else
+		{
+		    v[VARIABLE_NAME] = variable_name(start_position, dollar_position);
+		    variable_len = (int) ft_strlen(v[VARIABLE_NAME]);
+		    free(v[VARIABLE_NAME]);
+		}
 		dollar_position += (variable_len == 0);
 		dollar_position = ft_strchr(dollar_position + variable_len, '$');
 	}
@@ -379,8 +385,8 @@ char *rarg_start(char *redirection_position)
 
 	start = redirection_position;
 	start += (*start == start[1]);
-	start += (*start == '\02');
 	start++;
+	start += (*start == '\02');
 	if (*redirection_position == '>')
 	{
 		if (*start == '<')
@@ -391,6 +397,7 @@ char *rarg_start(char *redirection_position)
 		if (*start == '>')
 			start = 0;
 	}
+	start += (*start == ' ');
 	return start;
 }
 
@@ -417,6 +424,7 @@ char *rarg_end(char *redirection_position, char *source)
 	{
 		end = ft_strpbrk2(start, "\02><");
 	}
+	end -= ft_isinset(*end, "\02><");
 	return end;
 }
 

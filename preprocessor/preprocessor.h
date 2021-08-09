@@ -18,6 +18,9 @@
 	#define DEBUG_PRINT_MACRO(...)
 #endif
 
+#define USER_MACRO "ukio"
+#define HOME_MACRO "/home/"
+
 #define PREPROCESSOR_TEST_CASE(N, LINE) \
 	result = preprocess(TEST_CASE_##N); \
 	printf("\nTest case (preprocessing) %i: ", N); \
@@ -77,6 +80,7 @@
 # define TEST_FIND_REDIRECTION_SOURCE_4 "echo 123 >> filename >new_file >>correct_file"
 # define TEST_FIND_REDIRECTION_SOURCE_5 "<123 <456 cat <filename < file2 >567 > 098"
 # define TEST_FIND_REDIRECTION_SOURCE_6 "cat 1<content>234"
+# define TEST_FIND_REDIRECTION_SOURCE_7 "cat 1<content>$USER/../"
 
 # define TEST_FIND_LAST_REDIRECTION_OUT_1 (-1)
 # define TEST_FIND_LAST_REDIRECTION_IN_1 (4)
@@ -96,43 +100,61 @@
 # define TEST_FIND_LAST_REDIRECTION_OUT_6 (13)
 # define TEST_FIND_LAST_REDIRECTION_IN_6 (5)
 
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_1
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_1
+# define TEST_FIND_LAST_REDIRECTION_OUT_7 (13)
+# define TEST_FIND_LAST_REDIRECTION_IN_7 (5)
 
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_2
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_2
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_1 0
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_1 "filename"
 
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_3
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_3
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_2 "filename"
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_2 0
 
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_4
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_4
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_3 0
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_3 "file2"
 
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_5
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_5
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_4 "correct_file"
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_4 0
 
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_6
-#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_6
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_5 "098"
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_5 "file2"
 
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_6 "234"
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_6 "content"
+
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_7 "" USER_MACRO "/../"
+#define TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_7 "content"
 
 #define TEST_FIND_LAST_REDIRECTION_CASE(N, LINE) \
 	source = TEST_FIND_REDIRECTION_SOURCE_##N; \
 	redirections[0] = 0; \
 	redirections[1] = 0; \
 	redirections[2] = 0; \
-	find_last_redirection(redirections, source); \
+	pipes = preprocess_pipes(source); \
+	spaces = preprocess_spaces(pipes); \
+	variables = preprocess_variables(spaces); \
+	find_last_redirection(redirections, variables); \
 	printf("\nTest case (find last redirect) %i: ", N); \
-	compare_last_find_redirection(redirections, source, TEST_FIND_LAST_REDIRECTION_OUT_##N, TEST_FIND_LAST_REDIRECTION_IN_##N, LINE);
+	compare_last_find_redirection(redirections, variables, TEST_FIND_LAST_REDIRECTION_OUT_##N, TEST_FIND_LAST_REDIRECTION_IN_##N, LINE); \
+	free (pipes); \
+	free (spaces); \
+	free (variables);
 
 #define TEST_LAST_REDIRECTIONS_ARGUMENT(N, LINE) \
 	source = TEST_FIND_REDIRECTION_SOURCE_##N; \
 	redirections[0] = 0; \
 	redirections[1] = 0; \
 	redirections[2] = 0; \
-	find_last_redirection(redirections, source); \
+	in = TEST_LAST_REDIRECTION_WITH_ARGUMENT_IN_##N; \
+	out = TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_##N; \
+	pipes = preprocess_pipes(source); \
+	spaces = preprocess_spaces(pipes); \
+    variables = preprocess_variables(spaces); \
+    find_last_redirection(redirections, variables); \
 	printf("\nTest case (last redirect with args) %i: ", N); \
-	compare_redirect_arguments(redirections, source, \
-	TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_##N, TEST_LAST_REDIRECTION_WITH_ARGUMENT_OUT_##N, LINE);
+	compare_redirect_arguments(redirections, variables, out, in, LINE); \
+    free (pipes); \
+    free (spaces); \
+    free (variables);
 
 typedef enum	e_preprocessor_mode
 {
@@ -142,6 +164,7 @@ typedef enum	e_preprocessor_mode
 char			*preprocess(char *raw_input);
 char			*preprocess_spaces(char *source);
 char			*preprocess_pipes(char *source);
+char            *preprocess_variables(char *source);
 char			*preprocess_redirection(char *source);
 int				is_escaped(char *char_ptr, char *start_str, char* escape_chars);
 char			**preprocess_arguments(char **argv);

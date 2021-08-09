@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <printf.h>
 #include <signal.h>
+#include <stdio.h>
 #include "../command.h"
 #include "processes.h"
 #include "../shell_status.h"
