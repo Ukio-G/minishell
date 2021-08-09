@@ -6,11 +6,23 @@
 /*   By: lweeper <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 17:42:55 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/07 20:44:07 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/09 11:23:27 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "basic_shell.h"
+
+int	biggest_len(char *str1, char *str2)
+{
+	int	len1;
+	int	len2;
+
+	len1 = ft_strlen(str1);
+	len2 = ft_strlen(str2);
+	if (len1 > len2)
+		return (len1);
+	return (len2);
+}
 
 void	free_current_and_old_path(char *current_path, char *old_path)
 {
@@ -38,7 +50,7 @@ static void	change_and_update(char *current_path, char *old_path)
 	if (!current_path)
 	{
 		ft_putstr_fd("minishell: cd: HOME not set\n", 1);
-		return;
+		return ;
 	}
 	chdir(current_path);
 	update_env("PWD", current_path);
@@ -55,10 +67,10 @@ void	cd(char **argv)
 	mode_t		mode;
 
 	if (get_2d_array_size(argv) > 2)
-		return (pr_and_ret("minishell: cd: too many arguments\n",0, 0));
+		return (pr_and_ret("minishell: cd: too many arguments\n", 0, 0));
 	old_path = find_env_by_key("PWD");
-	if (get_2d_array_size(argv) == 1 || (ft_strncmp("--", argv[1],
-				ft_strlen(argv[1])) == 0))
+	if ((get_2d_array_size(argv) == 1) || (ft_strncmp("--", argv[1],
+				biggest_len("--", argv[1])) == 0))
 	{
 		current_path = find_env_by_key("HOME");
 		return (change_and_update(current_path, old_path));

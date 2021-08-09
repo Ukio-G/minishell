@@ -16,7 +16,6 @@ void	add_if_is(char *key, char *value, int key_num, int update_len)
 {
 	char	*upd_str;
 
-	update_len = ft_strlen(key) + ft_strlen(value) + 2;
 	upd_str = (char *)malloc(update_len);
 	ft_memcpy(upd_str, key, ft_strlen(key));
 	upd_str[ft_strlen(key)] = '=';

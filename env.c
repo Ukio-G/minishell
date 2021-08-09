@@ -19,7 +19,7 @@ void	env(void)
 
 	i = 0;
 	temp = get_status()->envp;
-	while (temp[i])
+	while (temp[i] && temp[i][0] != INVISIBLE_PREFIX)
 	{
 		ft_putstr_fd(temp[i], 1);
 		ft_putstr_fd("\n", 1);
