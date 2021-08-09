@@ -142,6 +142,8 @@ void input_loop()
 {
 	char *line;
 
+	get_status()->fd_wt = dup(1);
+	get_status()->fd_rt = dup(0);
 	line = readline("Readline: ");
 	get_status()->raw_input = line;
 	if (line == 0) {

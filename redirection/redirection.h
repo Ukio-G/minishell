@@ -27,8 +27,10 @@ void	set_status_redirection(char *redir[3]);
 void	create_redirection_file(char* redirect_pos);
 void	create_or_update(char *);
 void	create_or_clean(char *);
-//void	create_heredoc();
-//void	redirect_from_heredoc();
+void	create_heredoc();
+void	redirect_from_heredoc();
 void	start_redirection();
-void close_redirects();
+void	close_redirects();
+void	heredoc_read_loop();
+
 #endif

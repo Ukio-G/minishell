@@ -40,13 +40,13 @@ void wait_all_processes(t_ft_vector process_info_set)
 		close_all_pipes();
 		waitpid(info->pid, &info->exit_code, 0);
 	}
+	close_redirects();
 }
 
 pid_t new_process(t_process_info info)
 {
 	start_redirection();
 	pid_t new_pid = fork();
-
 	if (new_pid == 0)
 	{
 		if (info.in_d != NOT_SET)
@@ -58,11 +58,8 @@ pid_t new_process(t_process_info info)
 			dup2(info.out_d, STDOUT_FILENO);
 		}
 		close_all_pipes();
-		close_redirects();
 		execve(info.bin_path, info.argv, info.envp);
 	}
-	close_redirects();
-
 	return new_pid;
 }
 

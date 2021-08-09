@@ -21,6 +21,7 @@ add_executable(minishell
         preprocessor/preprocessor.c
         test_preprocessor.c
         redirection/redirection.c
+        redirection/heredoc.c
         )
 
 include_directories(libft get-next-line .)

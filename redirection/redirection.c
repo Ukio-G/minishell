@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 13:03:36 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/09 17:16:13 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/09 23:06:37 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 #include "shell_status.h"
 #include "preprocessor/preprocessor.h"
 
+void create_heredoc();
 
+void redirect_from_heredoc();
 
 t_redirect_type redirect_type(char *start_position)
 {
@@ -81,6 +83,7 @@ void create_redirection_file(char* redirect_pos)
 	char *substr[2];
 	t_redirect_type type;
 
+	ft_memset(buf, 0, 512);
 	type = redirect_type(redirect_pos);
 	rarg_substring(substr, redirect_pos);
 	ft_slice_cpy(buf, substr[0], substr[1]);
@@ -136,30 +139,21 @@ void start_out_redirect(t_redirect_type type)
 	}
 }
 
-void close_redirects()
-{
-	t_redirect_type output_type;
-	t_redirect_type input_type;
-
-	output_type = get_status()->redirect.output_type;
-	input_type = get_status()->redirect.input_type;
-	if (output_type != R_NO_TYPE)
-		close(get_status()->redirect.out_fd);
-	if (input_type != R_NO_TYPE)
-		close(get_status()->redirect.in_fd);
-}
-
 void start_input_redirect(t_redirect_type type)
 {
+	char *filename;
+
 	if (type == R_SINGLE_INPUT)
 	{
-		get_status()->redirect.in_fd = open(get_status()->redirect.in_filename, O_RDONLY, 0644);
+		filename = get_status()->redirect.in_filename;
+		get_status()->redirect.in_fd = open(filename, O_RDONLY, 0644);
 		dup2(get_status()->redirect.in_fd, 0);
 	}
 	else if (type == R_DOUBLE_INPUT)
 	{
-//		create_heredoc();
-//		redirect_from_heredoc();
+		create_heredoc();
+		heredoc_read_loop();
+		redirect_from_heredoc();
 	}
 }
 
@@ -170,10 +164,31 @@ void start_redirection()
 
 	output_type = get_status()->redirect.output_type;
 	input_type = get_status()->redirect.input_type;
-	if (output_type != R_NO_TYPE)
-		start_out_redirect(output_type);
 	if (input_type != R_NO_TYPE)
 		start_input_redirect(input_type);
+	if (output_type != R_NO_TYPE)
+		start_out_redirect(output_type);
+}
+
+void close_redirects()
+{
+	t_redirect_type output_type;
+	t_redirect_type input_type;
+
+	output_type = get_status()->redirect.output_type;
+	input_type = get_status()->redirect.input_type;
+	if (output_type != R_NO_TYPE)
+	{
+		close(get_status()->redirect.out_fd);
+		dup2(get_status()->fd_wt, 1);
+		close(get_status()->fd_wt);
+	}
+	if (input_type != R_NO_TYPE)
+	{
+		close(get_status()->redirect.in_fd);
+		dup2(get_status()->fd_rt, 0);
+		close(get_status()->fd_rt);
+	}
 }
 
 void set_status_redirection(char *redir[3])

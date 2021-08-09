@@ -48,7 +48,7 @@ size_t get_2d_array_size(char **array)
 	size = 0;
 	while (*array != 0)
 	{
-		*array++;
+		array++;
 		size++;
 	}
 	return (size);

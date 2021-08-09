@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 12:31:21 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/09 17:05:50 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/09 17:10:20 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -579,6 +579,7 @@ char *preprocess(char *raw_input)
 	char *variables;
 	char *redirection;
 
+	init_redirection(&get_status()->redirect);
 	pipes = preprocess_pipes(raw_input);
 	spaces = preprocess_spaces(pipes);
 	variables = preprocess_variables(spaces);

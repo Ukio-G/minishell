@@ -21,6 +21,8 @@ typedef struct		s_shell_status
 	int				gid;
 	t_redirect		redirect;
 	int 			error;
+	int 			fd_wt;
+	int 			fd_rt;
 }					t_shell_status;
 
 
