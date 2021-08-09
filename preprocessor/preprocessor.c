@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 12:31:21 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/08 22:25:47 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/09 17:05:50 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ char **preprocess_arguments(char **argv)
 int variable_length(char *start_position)
 {
 	char *last_position;
-	last_position = ft_strpbrk2(start_position + 1, "\02\"$/ ");
+	last_position = ft_strpbrk2(start_position + 1, "\02\"$/ ><");
 	return (int) (last_position - start_position);
 }
 
@@ -425,6 +425,8 @@ char *rarg_end(char *redirection_position, char *source)
 		end = ft_strpbrk2(start, "\02><");
 	}
 	end -= ft_isinset(*end, "\02><");
+	while (*end == '\0')
+		end--;
 	return end;
 }
 
@@ -441,16 +443,16 @@ void rarg_substring(char *substring[2], char *start)
 
 /*
  * Find last input and output redirections
- * redirections[LAST_OUT_REDIRECT] - contains last out redirection (>> or >)
- * redirections[LAST_IN_REDIRECT] - contains las input redirection (<< or <)
+ * redirections[LAST_OUT] - contains last out redirection (>> or >)
+ * redirections[LAST_IN] - contains las input redirection (<< or <)
  * Will keep a pointer to the first character of redirection ( especially
  * relevant for cases >> <<)
  * Example:
  * cat <file.a <file.b >file.c >>file.d >file.e
  *             |                        |
- *       redirections[LAST_IN_REDIRECT] |
+ *       redirections[LAST_IN] |
  *                                      |
- *                      redirections[LAST_OUT_REDIRECT]
+ *                      redirections[LAST_OUT]
  */
 void find_last_redirection(char *redirections[3], char *source)
 {
@@ -462,9 +464,9 @@ void find_last_redirection(char *redirections[3], char *source)
 		if (!is_escaped(redirection, source, "\'\""))
 		{
 			if (*redirection == '>')
-				redirections[LAST_OUT_REDIRECT] = redirection;
+				redirections[LAST_OUT] = redirection;
 			else if (*redirection == '<')
-				redirections[LAST_IN_REDIRECT] = redirection;
+				redirections[LAST_IN] = redirection;
 			redirection += (redirection[1] == '>') + (redirection[1] == '<') + 1;
 			redirection = ft_strpbrk2(redirection, "><");
 		}
@@ -483,9 +485,9 @@ void find_last_redirection(char *redirections[3], char *source)
  * |           |                        |     |
  * source      |                        |     |
  *             |                        |     |
- *       redirections[LAST_IN_REDIRECT] |     |
+ *       redirections[LAST_IN] |     |
  *                                      |     |
- *                      redirections[LAST_OUT_REDIRECT]
+ *                      redirections[LAST_OUT]
  *                                            |
  *                    redirections[END_REDIRECTIONS_STRING]
  */
@@ -493,21 +495,81 @@ void find_end_redirection_string(char *redirections[3], char *source)
 {
 	char *end;
 
-	if (redirections[LAST_IN_REDIRECT] > redirections[LAST_OUT_REDIRECT])
-		end = redirections[LAST_IN_REDIRECT];
+	if (redirections[LAST_IN] > redirections[LAST_OUT])
+		end = redirections[LAST_IN];
 	else
-		end = redirections[LAST_OUT_REDIRECT];
+		end = redirections[LAST_OUT];
 	redirections[END_REDIRECTIONS_STRING] = rarg_end(end, source);
 }
 
+char *redirection_argument_new(char *redirection)
+{
+	char *substring[2];
+	char *result;
+
+	rarg_substring(substring, redirection);
+	if (!substring[0] || !substring[1])
+		return 0;
+	result = ft_calloc((substring[1] - substring[0]) + 2, 1);
+	if (result)
+		ft_slice_cpy(result, substring[0], substring[1]);
+	return result;
+}
+
+void remove_redirections(char *redirections[3], char *source)
+{
+	char *substring[2];
+	char *first;
+	char *second;
+
+	if (redirections[LAST_OUT] > redirections[LAST_IN])
+	{
+		first = redirections[LAST_OUT];
+		second = redirections[LAST_IN];
+	}
+	else
+	{
+		first = redirections[LAST_IN];
+		second = redirections[LAST_OUT];
+	}
+	if (first)
+	{
+		substring[0] = first;
+		substring[1] = rarg_end(first, source);
+		remove_substring(source, substring);
+	}
+	if (second)
+	{
+		substring[0] = second;
+		substring[1] = rarg_end(second, source);
+		remove_substring(source, substring);
+	}
+}
 
 char *preprocess_redirection(char *source)
 {
 	char *result;
+	char *trimmed;
 	char *redirection[3];
 
 	result = ft_strdup(source);
-	return result;
+	ft_memset(redirection, 0, sizeof(void*) * 3);
+	find_last_redirection(redirection, result);
+	set_status_redirection(redirection);
+	while (redirection[LAST_IN] || redirection[LAST_OUT])
+	{
+		// Create output file
+		if (redirection[LAST_OUT])
+			create_redirection_file(redirection[LAST_OUT]);
+		// Remove last redirection
+		remove_redirections(redirection, result);
+
+		ft_memset(redirection, 0, sizeof(void*) * 3);
+		find_last_redirection(redirection, result);
+	}
+	trimmed = ft_strtrim(result, "\02");
+	free(result);
+	return trimmed;
 }
 
 char *preprocess(char *raw_input)
@@ -526,7 +588,9 @@ char *preprocess(char *raw_input)
 	DEBUG_PRINT_MACRO("Debug print spaces: |%s|\n", spaces);
 	DEBUG_PRINT_MACRO("Debug print variables: |%s|\n", variables);
 	DEBUG_PRINT_MACRO("Debug print redirection: |%s|\n", redirection);
-
+#ifdef PRINT_PREPROCESSED_INPUT
+	printf("|%s|\n", redirection);
+   #endif
 	free(pipes);
 	free(spaces);
 	free(variables);

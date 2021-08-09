@@ -20,7 +20,7 @@ void print_process(t_process_info info)
 void create_process_set(t_ft_vector process_info_set)
 {
 	t_process_info *info;
-	printf("process_info_set size %i\n", process_info_set.size);
+	printf("process_info_set size %i\n", (int)process_info_set.size);
 	while (ft_vector_iter(&process_info_set))
 	{
 		info = ft_vector_iter_value(&process_info_set);
@@ -44,6 +44,7 @@ void wait_all_processes(t_ft_vector process_info_set)
 
 pid_t new_process(t_process_info info)
 {
+	start_redirection();
 	pid_t new_pid = fork();
 
 	if (new_pid == 0)
@@ -57,8 +58,10 @@ pid_t new_process(t_process_info info)
 			dup2(info.out_d, STDOUT_FILENO);
 		}
 		close_all_pipes();
+		close_redirects();
 		execve(info.bin_path, info.argv, info.envp);
 	}
+	close_redirects();
 
 	return new_pid;
 }

@@ -8,8 +8,8 @@
 # define READ_POS 0
 # define WRITE_POS 1
 # define DOLLAR_POS 2
-# define LAST_OUT_REDIRECT 0
-# define LAST_IN_REDIRECT 1
+# define LAST_OUT 0
+# define LAST_IN 1
 # define END_REDIRECTIONS_STRING 2
 
 #ifdef DEBUG_PRINT
@@ -18,8 +18,8 @@
 	#define DEBUG_PRINT_MACRO(...)
 #endif
 
-#define USER_MACRO "ukio"
-#define HOME_MACRO "/home/"
+#define USER_MACRO "atawana"
+#define HOME_MACRO "/Users/"
 
 #define PREPROCESSOR_TEST_CASE(N, LINE) \
 	result = preprocess(TEST_CASE_##N); \
@@ -156,11 +156,6 @@
     free (spaces); \
     free (variables);
 
-typedef enum	e_preprocessor_mode
-{
-	NO_MODE, SOFT_MODE, HARD_MODE
-}				t_preprocessor_mode;
-
 char			*preprocess(char *raw_input);
 char			*preprocess_spaces(char *source);
 char			*preprocess_pipes(char *source);
@@ -175,4 +170,6 @@ void			find_last_redirection(char *redirections[3], char *source);
 void			rarg_substring(char *substring[2], char *start);
 char			*rarg_end(char *redirection_position, char *source);
 char			*rarg_start(char *redirection_position);
+char			*redirection_argument_new(char *redirection);
+
 #endif

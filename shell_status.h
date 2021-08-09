@@ -2,6 +2,7 @@
 #define MINISHELL_SHELL_STATUS_H
 
 #include <stdlib.h>
+#include <redirection/redirection.h>
 #include "command.h"
 #include "ft_vector/ft_vector.h"
 
@@ -18,8 +19,8 @@ typedef struct		s_shell_status
 	t_ft_vector		process_info_set;
 	int				uid;
 	int				gid;
-	int 			redirect_fd;
-	int 			is_double_input_redirected;
+	t_redirect		redirect;
+	int 			error;
 }					t_shell_status;
 
 

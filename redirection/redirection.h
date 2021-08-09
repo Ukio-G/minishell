@@ -14,16 +14,21 @@ typedef struct s_redirect
 {
 	t_redirect_type input_type;
 	t_redirect_type output_type;
-	char *delimiter;
-	char *str_ptr;
-	char *filename;
+	char *in_delimiter;
+	char *out_filename;
+	char *in_filename;
 	int out_fd;
 	int in_fd;
 } t_redirect;
 
 t_redirect_type redirect_type(char *start_position);
-void redirection_delimiter(t_redirect *p_redirect);
-void redirection_filename(t_redirect *p_redirect);
-void redirection_file_descriptor(t_redirect *p_redirect);
-
+void	init_redirection(t_redirect *redirect);
+void	set_status_redirection(char *redir[3]);
+void	create_redirection_file(char* redirect_pos);
+void	create_or_update(char *);
+void	create_or_clean(char *);
+//void	create_heredoc();
+//void	redirect_from_heredoc();
+void	start_redirection();
+void close_redirects();
 #endif

@@ -97,8 +97,8 @@ void compare_last_find_redirection(char *redirections[3], char *source, int out_
 	int out_idx;
 	int in_idx;
 
-	out_idx = (redirections[LAST_OUT_REDIRECT]) ? (int)(redirections[LAST_OUT_REDIRECT] - source) : -1;
-	in_idx = (redirections[LAST_IN_REDIRECT]) ? (int)(redirections[LAST_IN_REDIRECT] - source) : -1;
+	out_idx = (redirections[LAST_OUT]) ? (int)(redirections[LAST_OUT] - source) : -1;
+	in_idx = (redirections[LAST_IN]) ? (int)(redirections[LAST_IN] - source) : -1;
 
 	if ((out_idx == out_idx_expected) && (in_idx == in_idx_expected))
 	{
@@ -128,19 +128,19 @@ void compare_redirect_arguments(char *redirections[3], char *source, char *out_e
 	ft_memset(out_buf, 0, 512);
 	ft_memset(in_buf, 0, 512);
 
-	if (redirections[LAST_OUT_REDIRECT] && out_expected)
+	if (redirections[LAST_OUT] && out_expected)
 	{
-	    out_arg[0] = rarg_start(redirections[LAST_OUT_REDIRECT]);
-		out_arg[1] = rarg_end(redirections[LAST_OUT_REDIRECT], source);
+	    out_arg[0] = rarg_start(redirections[LAST_OUT]);
+		out_arg[1] = rarg_end(redirections[LAST_OUT], source);
 		ft_slice_cpy(out_buf,out_arg[0], out_arg[1]);
         printf("stdout compare:\n");
 		compare_string(out_buf, out_expected, line);
 	}
 
-	if (redirections[LAST_IN_REDIRECT] && in_expected)
+	if (redirections[LAST_IN] && in_expected)
 	{
-	    in_arg[0] = rarg_start(redirections[LAST_IN_REDIRECT]);
-	    in_arg[1] = rarg_end(redirections[LAST_IN_REDIRECT], source);
+	    in_arg[0] = rarg_start(redirections[LAST_IN]);
+	    in_arg[1] = rarg_end(redirections[LAST_IN], source);
 	    ft_slice_cpy(in_buf,in_arg[0], in_arg[1]);
 	    printf("stdin compare:\n");
 	    compare_string(in_buf, in_expected, line);

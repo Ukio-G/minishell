@@ -4,7 +4,8 @@ project(minishell C)
 set(CMAKE_C_STANDARD 90)
 
 file(GLOB FT_VECTOR_SRCS "ft_vector/*.c")
-add_definitions(-D DEBUG_PRINT)
+#add_definitions(-D DEBUG_PRINT)
+add_definitions(-D PRINT_PREPROCESSED_INPUT)
 add_executable(minishell
         ${FT_VECTOR_SRCS}
         main.c

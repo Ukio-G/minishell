@@ -1,12 +1,19 @@
 #include "permission.h"
 #include "../shell_status.h"
 #include <sys/stat.h>
+#include <fcntl.h>
 
-int is_file_exist(char *abs_filename)
+int is_file_exist(char *filename)
 {
 	struct stat s;
-	return (stat(abs_filename, &s) == 0);
+	return (stat(filename, &s) == 0);
 }
+
+void create_empty_file(char *filename)
+{
+	int fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+}
+
 
 t_permission mode_to_permissions(mode_t mode, t_user_type type)
 {
