@@ -125,6 +125,8 @@ t_ft_vector create_process_string_set(char *processed_input)
 	return result;
 }
 
+void update_return_code();
+
 void process_commands(char * line)
 {
 	get_status()->processed_input = process_input(line);
@@ -136,6 +138,12 @@ void process_commands(char * line)
 
 	create_process_set(get_status()->process_info_set);
 	wait_all_processes(get_status()->process_info_set);
+	update_return_code();
+}
+
+void update_return_code()
+{
+	update_env("?", ft_itoa(get_status()->return_code));
 }
 
 void input_loop()
@@ -169,6 +177,7 @@ void startup_init(char ** argv, char **envp)
 	s_init();
 	init_status(argv, copy_env(envp));
 	setup_history();
+	update_env("?", "0");
 #ifdef TEST_PREPROCESSOR
 	test_preprocessor();
 #endif

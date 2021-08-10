@@ -8,6 +8,7 @@
 #include <file_utils.h>
 #include <errno.h>
 #include <errors_printer/error_printer.h>
+#include <env_utils.h>
 #include "../command.h"
 #include "processes.h"
 #include "../shell_status.h"
@@ -41,7 +42,11 @@ void wait_all_processes(t_ft_vector process_info_set)
 		info = ft_vector_iter_value(&process_info_set);
 		close_all_pipes();
 		if (info->pid > 0)
+		{
 			waitpid(info->pid, &info->exit_code, 0);
+			if ( WIFEXITED(info->exit_code) )
+				get_status()->return_code = WEXITSTATUS(info->exit_code);
+		}
 	}
 	close_redirects();
 }
