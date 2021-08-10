@@ -14,6 +14,9 @@
 
 void	ft_exit(void)
 {
+	int	exit_status;
+
+	exit_status = ft_atoi(find_env_by_key("?"));
 	ft_putstr_fd("exit\n", 1);
-	exit(0);
+	exit(exit_status);
 }

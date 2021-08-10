@@ -6,7 +6,7 @@
 /*   By: lweeper <lweeper@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 12:51:04 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/10 20:19:48 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/11 00:34:45 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static void	print_exp_env(char **env)
 	}
 }
 
-void	process_var(char *var)
+int	process_var(char *var)
 {
 	char	**key_value;
 	char	*key;
@@ -86,32 +86,37 @@ void	process_var(char *var)
 	if (!is_valid_identifier(key))
 	{
 		print_error_msg("export", var, "not a valid identifier");
-		return ;
+		return (1);
 	}
 	if (ft_split_count(key_value) > 1)
 		update_env(key, var + ft_strlen(key) + 1);
 	else
 		update_env(key, NULL);
 	ft_split_free(key_value);
+	return (0);
 }
 
-void	export(t_process_info *info)
+int	export(t_process_info *info)
 {
 	int		i;
 	int		argv_size;
 	char	**argv;
+	int		exit_status;
 
+	exit_status = 0;
 	argv = info->argv;
 	argv_size = get_2d_array_size(argv);
 	if (argv_size == 1)
 	{
 		print_exp_env(sort_env());
-		return ;
+		return (0);
 	}
 	i = 1;
 	while (i < argv_size)
 	{
-		process_var(argv[i]);
+		if(process_var(argv[i]))
+			exit_status = 1;
 		i++;
 	}
+	return (exit_status);
 }

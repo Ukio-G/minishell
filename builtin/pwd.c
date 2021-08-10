@@ -12,7 +12,7 @@
 
 #include "basic_shell.h"
 
-void	pwd(void)
+int	pwd(void)
 {
 	char	*buffer_pwd;
 
@@ -21,4 +21,5 @@ void	pwd(void)
 	ft_putstr_fd("\n", 1);
 	if (buffer_pwd)
 		free(buffer_pwd);
+	return (0);
 }
