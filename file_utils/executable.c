@@ -77,26 +77,27 @@ int is_builtin(char *cmd)
 	return 0;
 }
 
-void exec_builtin(t_process_info *info)
+int exec_builtin(t_process_info *info)
 {
 	char *cmd;
 
 	cmd = info->bin_path;
 	printf("%s %i |%s|\n", __func__, __LINE__, cmd);
 	if (ft_strncmp("echo", cmd, 5) == 0)
-		echo(info);
+		return echo(info);
 	if (ft_strncmp("cd", cmd, 3) == 0)
-		cd(info);
+		return cd(info);
 	if (ft_strncmp("unset", cmd, 6) == 0)
-		unset(info);
+		return unset(info);
 	if (ft_strncmp("pwd", cmd, 4) == 0)
-		pwd();
+		return pwd();
 	if (ft_strncmp("env", cmd, 4) == 0)
-		env();
+		return env();
 	if (ft_strncmp("export", cmd, 7) == 0)
-		export(info);
+		return export(info);
 	if (ft_strncmp("exit", cmd, 5) == 0)
 		ft_exit();
+	return 0;
 }
 
 char *make_bin_path(char * input)
