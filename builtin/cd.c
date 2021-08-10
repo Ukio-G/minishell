@@ -6,7 +6,7 @@
 /*   By: lweeper <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 17:42:55 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/10 23:12:35 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/11 02:00:41 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	free_current_and_old_path(char *current_path, char *old_path)
 		free(old_path);
 }
 
-static int pr_and_ret(char *msg, char *current_path, char *old_path)
+static int	pr_and_ret(char *msg, char *current_path, char *old_path)
 {
 	if (current_path)
 	{
@@ -44,7 +44,7 @@ static int pr_and_ret(char *msg, char *current_path, char *old_path)
 	return (1);
 }
 
-static int change_and_update(char *current_path, char *old_path)
+static int	change_and_update(char *current_path, char *old_path)
 {
 	if (!current_path)
 	{
@@ -64,18 +64,19 @@ int	cd(t_process_info *info)
 	char		*old_path;
 	struct stat	s;
 	mode_t		mode;
-	char		**argv;
 
-	argv = info->argv;
 	old_path = find_env_by_key("PWD");
-	if ((get_2d_array_size(argv) == 1) || (ft_strncmp("--", argv[1],
-				biggest_len("--", argv[1])) == 0))
+	if ((get_2d_array_size(info->argv) == 1) || (ft_strncmp("--", info->argv[1],
+				biggest_len("--", info->argv[1])) == 0))
 	{
 		current_path = find_env_by_key("HOME");
 		return (change_and_update(current_path, old_path));
 	}
-	if (process_path(argv, &current_path) == -1)
-		return (pr_and_ret(0, current_path, old_path));
+	if (process_path(info->argv, &current_path) == -1)
+	{
+		free_current_and_old_path(current_path, old_path);
+		return (1);
+	}
 	if (stat(current_path, &s) == -1)
 		return (pr_and_ret(": No such file or directory\n", current_path,
 				old_path));

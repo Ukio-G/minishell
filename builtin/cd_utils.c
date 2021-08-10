@@ -6,7 +6,7 @@
 /*   By: lweeper <lweeper@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 12:30:53 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/09 15:33:45 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/11 01:57:54 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	process_path(char **argv, char **current_path)
 		oldpwd = find_env_by_key("OLDPWD");
 		if (oldpwd == 0)
 		{
-			ft_putstr_fd("minishell: cd: OLDPWD not set", 1);
+			ft_putstr_fd("minishell: cd: OLDPWD not set\n", 1);
 			free(oldpwd);
 			return (-1);
 		}

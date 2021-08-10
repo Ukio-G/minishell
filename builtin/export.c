@@ -6,7 +6,7 @@
 /*   By: lweeper <lweeper@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 12:51:04 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/11 00:34:45 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/11 00:36:48 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	export(t_process_info *info)
 	i = 1;
 	while (i < argv_size)
 	{
-		if(process_var(argv[i]))
+		if (process_var(argv[i]))
 			exit_status = 1;
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: lweeper <lweeper@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 20:37:54 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/10 23:14:39 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/10 23:54:00 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ int	env(void)
 	temp = get_status()->envp;
 	while (temp[i])
 	{
-		if(temp[i][0] == INVISIBLE_PREFIX)
+		if (temp[i][0] == INVISIBLE_PREFIX)
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		ft_putstr_fd(temp[i], 1);
 		ft_putstr_fd("\n", 1);

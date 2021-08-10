@@ -6,7 +6,7 @@
 /*   By: lweeper <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 15:29:29 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/07 17:38:08 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/10 23:54:00 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ static void	process_arg(char **argv, int n_flag)
 
 int	echo(t_process_info *info)
 {
-	int	n_flag;
-	char **argv;
+	int		n_flag;
+	char	**argv;
 
 	argv = info->argv;
 	n_flag = 0;
