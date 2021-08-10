@@ -6,7 +6,7 @@
 /*   By: lweeper <lweeper@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 12:51:04 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/08 18:30:17 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/10 20:19:48 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,11 @@ static void	print_exp_env(char **env)
 			ft_putstr_fd("declare -x ", 1);
 			pair = ft_split(env[i], '=');
 			ft_putstr_fd(pair[0], 1);
+			if (pair[1] == NULL)
+			{
+				ft_putstr_fd("\n", 1);
+				return ;
+			}
 			ft_putstr_fd("=\"", 1);
 			ft_putstr_fd(pair[1], 1);
 			ft_putstr_fd("\"\n", 1);
@@ -85,6 +90,8 @@ void	process_var(char *var)
 	}
 	if (ft_split_count(key_value) > 1)
 		update_env(key, var + ft_strlen(key) + 1);
+	else
+		update_env(key, NULL);
 	ft_split_free(key_value);
 }
 
