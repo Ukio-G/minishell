@@ -1,9 +1,7 @@
-#include "shell_status.h"
 #include "env_utils.h"
 #include "libft.h"
 #include "file_utils.h"
 #include "permission.h"
-#include <sys/stat.h>
 #include <basic_shell.h>
 
 char *make_abs_path(char* path, char* filename)
@@ -59,6 +57,8 @@ char* is_bin_in_env(char *binary_name)
 
 int is_builtin(char *cmd)
 {
+	if (!cmd)
+		return 0;
 	if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0)
 		return 1;
 	if (ft_strncmp("cd", cmd, ft_strlen(cmd)) == 0)
@@ -104,12 +104,13 @@ char *make_bin_path(char * input)
 
 	if (ft_strncmp(input, "./", 2) == 0)
 	{
+		ft_memset(buffer, 0, 1024);
 		getcwd(buffer, 1024);
-		result = malloc(ft_strlen(buffer) + 2 + ft_strlen(input + 2));
+		result = ft_calloc(1, ft_strlen(buffer) + 2 + ft_strlen(input + 2));
 		ft_memcpy(result, buffer, ft_strlen(buffer));
 		result[ft_strlen(buffer)] = '/';
-		ft_memcpy(result, input + 2, ft_strlen(input + 2));
-		result[ft_strlen(buffer) + 2 + ft_strlen(input + 2)] = 0;
+		ft_memcpy(result + ft_strlen(result), input + 2, ft_strlen(input + 2));
+		return result;
 	}
 	else if (ft_strncmp(input, "/", 1) == 0 || is_builtin(input))
 		return ft_strdup(input);
@@ -118,14 +119,25 @@ char *make_bin_path(char * input)
 	return 0;
 }
 
-int bin_check(char * path)
+t_executable_file_error is_correct_executable(char *cmd)
 {
-	// Try to execute dir
 
-	// No execute permission
+	if (is_builtin(cmd))
+		return E_FILE_NO_ERROR;
 
-	// Try to execute "./"
+	if (*cmd == '.' || *cmd == '/')
+	{
+		if (is_directory(cmd))
+			return E_FILE_IS_DIRECTORY;
+		if (!is_file_exist(cmd))
+			return E_FILE_FILE_NOT_FOUND;
+	}
+	else
+	{
+		if (!is_bin_in_env(cmd))
+			return E_FILE_CMD_NOT_FOUND;
+	}
 
-	// Symlinks?
-	return 0;
+	return E_FILE_NO_ERROR;
 }
+

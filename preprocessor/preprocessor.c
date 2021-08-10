@@ -163,6 +163,8 @@ char **preprocess_arguments(char **argv)
 	int argc_count;
 	char **result;
 	int i;
+	if (argv == 0)
+		return 0;
 	i = 0;
 	argc_count = ft_split_count(argv);
 	result = malloc((argc_count + 1) * sizeof(char *));

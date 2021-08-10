@@ -6,6 +6,8 @@
 #include <signal.h>
 #include <stdio.h>
 #include <file_utils.h>
+#include <errno.h>
+#include <errors_printer/error_printer.h>
 #include "../command.h"
 #include "processes.h"
 #include "../shell_status.h"
@@ -44,6 +46,15 @@ void wait_all_processes(t_ft_vector process_info_set)
 	close_redirects();
 }
 
+void process_execve_errno(char *cmd)
+{
+	if (errno == EACCES)
+	{
+		print_error(E_FILE_NO_PERMISSION, cmd);
+	}
+}
+
+
 pid_t new_process(t_process_info info)
 {
 	start_redirection();
@@ -68,7 +79,11 @@ pid_t new_process(t_process_info info)
 		}
 		close_all_pipes();
 		if (!info.is_builtin)
+		{
 			execve(info.bin_path, info.argv, info.envp);
+			process_execve_errno(info.bin_path);
+			exit(code_from_error(info.error));
+		}
 		else
 		{
 			exec_builtin(&info);
@@ -101,5 +116,6 @@ t_process_info new_process_info(char *path, char **argv, char **envp)
 	result.in_d = NOT_SET;
 	result.out_d = NOT_SET;
 	result.is_builtin = is_builtin(path);
+	result.error = is_correct_executable(path);
 	return result;
 }

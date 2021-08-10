@@ -7,6 +7,7 @@
 #include "fcntl.h"
 #include <errno.h>
 #include <signal/signal.h>
+#include <errors_printer/error_printer.h>
 #include "shell_status.h"
 #include "command.h"
 #include "env_utils.h"
@@ -71,17 +72,15 @@ t_process_info create_process_info(char * command)
 	int tokens = ft_split_count(processed_input);
 	if (tokens > 0)
 	{
-		bin_path = make_bin_path(processed_input[0]);
-		if (bin_path || is_builtin(bin_path))
-		{
-			//TODO: bin_check(info.bin_path);
-			info = new_process_info(bin_path, processed_input, get_status()->envp);
-			ft_split_free(processed_input);
-		}
+		bin_path = processed_input[0];
+		if (is_correct_executable(bin_path) == E_FILE_NO_ERROR)
+			info = new_process_info(make_bin_path(bin_path), processed_input, get_status()->envp);
 		else
 		{
-			// TODO: Print not found + clear memory
+			print_error(is_correct_executable(bin_path), bin_path);
+			info = new_process_info(bin_path, 0, 0);
 		}
+		ft_split_free(processed_input);
 	}
 	return info;
 }
@@ -151,6 +150,8 @@ void input_loop()
 		ctrl_d_handler();
 		return;
 	} else {
+		if (*line == 0)
+			return;
 		char * trimmed = ft_strtrim(line, " \t\n");
 		if (ft_strlen(trimmed) != 0) {
 			update_history(line);
@@ -168,7 +169,9 @@ void startup_init(char ** argv, char **envp)
 	s_init();
 	init_status(argv, copy_env(envp));
 	setup_history();
+#ifdef TEST_PREPROCESSOR
 	test_preprocessor();
+#endif
 }
 
 int main(int argc, char ** argv, char **envp)

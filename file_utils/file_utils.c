@@ -9,12 +9,6 @@ int is_file_exist(char *filename)
 	return (stat(filename, &s) == 0);
 }
 
-void create_empty_file(char *filename)
-{
-	int fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-}
-
-
 t_permission mode_to_permissions(mode_t mode, t_user_type type)
 {
 	t_permission result;
@@ -41,6 +35,20 @@ int is_file_group_owner(char *path)
 	{
 		return (int)s.st_gid == get_status()->gid;
 	}
+	return 0;
+}
+
+int is_directory(char *path)
+{
+	struct stat s;
+	mode_t mode;
+
+	if (!is_file_exist(path))
+		return 0;
+	stat(path, &s);
+	mode = (s.st_mode >> (3 * 4)) << (3 * 4);
+	if (mode == S_IFDIR)
+		return 1;
 	return 0;
 }
 

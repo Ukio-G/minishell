@@ -18,6 +18,7 @@ void		ft_vector_init(t_ft_vector *vector, size_t elem_size)
 	vector->size = 0;
 	vector->data = 0;
 	vector->special_free = 0;
+	vector->error = NO_ERROR;
 	vector->element_size = elem_size;
 	ft_vector_reallocate(vector);
 	ft_bzero(vector->data, vector->allocated * vector->element_size);
