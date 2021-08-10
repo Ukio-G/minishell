@@ -171,5 +171,6 @@ void			rarg_substring(char *substring[2], char *start);
 char			*rarg_end(char *redirection_position, char *source);
 char			*rarg_start(char *redirection_position);
 char			*redirection_argument_new(char *redirection);
+char*			preprocess_argument(char *argument);
 
 #endif
