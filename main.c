@@ -72,7 +72,9 @@ t_process_info create_process_info(char * command)
 	int tokens = ft_split_count(processed_input);
 	if (tokens > 0)
 	{
-		bin_path = processed_input[0];
+		bin_path = preprocess_argument(processed_input[0]);
+		free(processed_input[0]);
+		processed_input[0] = bin_path;
 		if (is_correct_executable(bin_path) == E_FILE_NO_ERROR)
 			info = new_process_info(make_bin_path(bin_path), processed_input, get_status()->envp);
 		else

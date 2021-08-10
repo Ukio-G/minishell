@@ -472,6 +472,10 @@ void find_last_redirection(char *redirections[3], char *source)
 			redirection += (redirection[1] == '>') + (redirection[1] == '<') + 1;
 			redirection = ft_strpbrk2(redirection, "><");
 		}
+		else
+		{
+			redirection++;
+		}
 	}
 }
 
