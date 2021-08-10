@@ -1,5 +1,5 @@
 #include "shell_status.h"
-#include "env/env.h"
+#include "env_utils.h"
 
 t_shell_status *init_status(char **argv, char **envp)
 {

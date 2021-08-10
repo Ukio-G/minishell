@@ -18,7 +18,7 @@
 	#define DEBUG_PRINT_MACRO(...)
 #endif
 
-#define USER_MACRO "atawana"
+#define USER_MACRO "lweeper"
 #define HOME_MACRO "/Users/"
 
 #define PREPROCESSOR_TEST_CASE(N, LINE) \

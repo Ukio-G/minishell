@@ -1,5 +1,5 @@
-#include "../shell_status.h"
-#include "../env/env.h"
+#include "shell_status.h"
+#include "env_utils.h"
 #include "libft.h"
 #include "file_utils.h"
 #include "permission.h"
