@@ -6,6 +6,7 @@
 #include "get_next_line.h"
 #include "fcntl.h"
 #include <errno.h>
+#include <signal/signal.h>
 #include "shell_status.h"
 #include "command.h"
 #include "env_utils.h"
@@ -70,57 +71,8 @@ t_process_info create_process_info(char * command)
 	int tokens = ft_split_count(processed_input);
 	if (tokens > 0)
 	{
-//<<<<<<< HEAD
 		bin_path = make_bin_path(processed_input[0]);
-		if (bin_path)
-//=
-			// ======
-//		info.bin_path = make_bin_path(processed_input[0]);
-//        if (ft_strncmp("echo", processed_input[0], ft_strlen(processed_input[0])) == 0)
-//        {
-//            echo(processed_input);
-//            ft_split_free(processed_input);
-//            return;
-//        }
-//        if (ft_strncmp("cd", processed_input[0], ft_strlen(processed_input[0])) == 0)
-//        {
-//            cd(processed_input);
-//            ft_split_free(processed_input);
-//            return;
-//        }
-//        if (ft_strncmp("unset", processed_input[0], ft_strlen(processed_input[0])) == 0)
-//        {
-//            unset(processed_input);
-//            ft_split_free(processed_input);
-//            return;
-//        }
-//        if (ft_strncmp("pwd", processed_input[0], ft_strlen(processed_input[0])) == 0)
-//        {
-//            pwd();
-//            ft_split_free(processed_input);
-//            return;
-//        }
-//        if (ft_strncmp("env", processed_input[0], ft_strlen(processed_input[0])) == 0)
-//        {
-//            env();
-//            ft_split_free(processed_input);
-//            return;
-//        }
-//        if (ft_strncmp("export", processed_input[0], ft_strlen(processed_input[0])) == 0)
-//        {
-//            export(processed_input);
-//            ft_split_free(processed_input);
-//            return;
-//        }
-//		if (ft_strncmp("exit", processed_input[0], ft_strlen(processed_input[0])) == 0)
-//		{
-//			ft_exit();
-//			ft_split_free(processed_input);
-//			return;
-//		}
-//
-//		if (info.bin_path)
-//>>>>>>> cd
+		if (bin_path || is_builtin(bin_path))
 		{
 			//TODO: bin_check(info.bin_path);
 			info = new_process_info(bin_path, processed_input, get_status()->envp);
@@ -128,7 +80,7 @@ t_process_info create_process_info(char * command)
 		}
 		else
 		{
-			// Print not found + clear memory
+			// TODO: Print not found + clear memory
 		}
 	}
 	return info;
@@ -196,12 +148,12 @@ void input_loop()
 	line = readline("Readline: ");
 	get_status()->raw_input = line;
 	if (line == 0) {
+		ctrl_d_handler();
 		return;
 	} else {
 		char * trimmed = ft_strtrim(line, " \t\n");
 		if (ft_strlen(trimmed) != 0) {
 			update_history(line);
-//			rl_redisplay();
 			process_commands(line);
 		}
 		free(line);
@@ -209,21 +161,20 @@ void input_loop()
 	}
 }
 
-void init_signals()
-{
-
-}
-
 void test_preprocessor();
+
+void startup_init(char ** argv, char **envp)
+{
+	s_init();
+	init_status(argv, copy_env(envp));
+	setup_history();
+	test_preprocessor();
+}
 
 int main(int argc, char ** argv, char **envp)
 {
-	init_signals();
-	init_status(argv, copy_env(envp));
 
-	setup_history();
-    test_preprocessor();
-
+	startup_init(argv, envp);
 	while (1) {
 		input_loop();
 	}

@@ -4,6 +4,7 @@
 #include "file_utils.h"
 #include "permission.h"
 #include <sys/stat.h>
+#include <basic_shell.h>
 
 char *make_abs_path(char* path, char* filename)
 {
@@ -56,6 +57,46 @@ char* is_bin_in_env(char *binary_name)
 	return 0;
 }
 
+int is_builtin(char *cmd)
+{
+	if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0)
+		return 1;
+	if (ft_strncmp("cd", cmd, ft_strlen(cmd)) == 0)
+		return 1;
+	if (ft_strncmp("unset", cmd, ft_strlen(cmd)) == 0)
+		return 1;
+	if (ft_strncmp("pwd", cmd, ft_strlen(cmd)) == 0)
+		return 1;
+	if (ft_strncmp("env", cmd, ft_strlen(cmd)) == 0)
+		return 1;
+	if (ft_strncmp("export", cmd, ft_strlen(cmd)) == 0)
+		return 1;
+	if (ft_strncmp("exit", cmd, ft_strlen(cmd)) == 0)
+		return 1;
+	return 0;
+}
+
+void exec_builtin(t_process_info *info)
+{
+	char *cmd;
+
+	cmd = info->bin_path;
+	if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0)
+		echo(info);
+	if (ft_strncmp("cd", cmd, ft_strlen(cmd)) == 0)
+		cd(info);
+	if (ft_strncmp("unset", cmd, ft_strlen(cmd)) == 0)
+		unset(info);
+	if (ft_strncmp("pwd", cmd, ft_strlen(cmd)) == 0)
+		pwd();
+	if (ft_strncmp("env", cmd, ft_strlen(cmd)) == 0)
+		env();
+	if (ft_strncmp("export", cmd, ft_strlen(cmd)) == 0)
+		export(info);
+	if (ft_strncmp("exit", cmd, ft_strlen(cmd)) == 0)
+		ft_exit();
+}
+
 char *make_bin_path(char * input)
 {
 	char buffer[1024];
@@ -70,14 +111,10 @@ char *make_bin_path(char * input)
 		ft_memcpy(result, input + 2, ft_strlen(input + 2));
 		result[ft_strlen(buffer) + 2 + ft_strlen(input + 2)] = 0;
 	}
-	else if (ft_strncmp(input, "/", 1) == 0)
-	{
+	else if (ft_strncmp(input, "/", 1) == 0 || is_builtin(input))
 		return ft_strdup(input);
-	}
 	else
-	{
 		return is_bin_in_env(input);
-	}
 	return 0;
 }
 
@@ -90,4 +127,5 @@ int bin_check(char * path)
 	// Try to execute "./"
 
 	// Symlinks?
+	return 0;
 }

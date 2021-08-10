@@ -47,10 +47,12 @@ static void	process_arg(char **argv, int n_flag)
 	}
 }
 
-void	echo(char **argv)
+void	echo(t_process_info *info)
 {
 	int	n_flag;
+	char **argv;
 
+	argv = info->argv;
 	n_flag = 0;
 	if (!is_arg_exist(argv, &n_flag))
 		return ;
@@ -62,5 +64,4 @@ void	echo(char **argv)
 	process_arg(argv, n_flag);
 	if (!n_flag)
 		ft_putchar_fd('\n', 1);
-	return ;
 }

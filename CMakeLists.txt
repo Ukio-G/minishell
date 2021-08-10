@@ -6,8 +6,11 @@ set(CMAKE_C_STANDARD 90)
 file(GLOB FT_VECTOR_SRCS "ft_vector/*.c")
 file(GLOB ENV "env/*.c")
 file(GLOB BUILTIN "builtin/*.c")
+
 #add_definitions(-D DEBUG_PRINT)
 add_definitions(-D PRINT_PREPROCESSED_INPUT)
+add_definitions(-D READLINE_LIBRARY)
+
 add_executable(minishell
         ${FT_VECTOR_SRCS}
         ${ENV}
@@ -24,9 +27,15 @@ add_executable(minishell
         test_preprocessor.c
         redirection/redirection.c
         redirection/heredoc.c
+        signal/signal.c
         )
 
-include_directories(libft get-next-line . env builtin file_utils)
+include_directories(libft get-next-line . env builtin file_utils rl)
 
-target_link_libraries(minishell PUBLIC readline ${CMAKE_SOURCE_DIR}/libft.a ${CMAKE_SOURCE_DIR}/get_next_line.a)
+target_link_libraries(minishell PUBLIC
+        ${CMAKE_SOURCE_DIR}/libtermcap.a
+        ${CMAKE_SOURCE_DIR}/libreadline.a
+        ${CMAKE_SOURCE_DIR}/libhistory.a
+        ${CMAKE_SOURCE_DIR}/libft.a
+        ${CMAKE_SOURCE_DIR}/get_next_line.a)
 

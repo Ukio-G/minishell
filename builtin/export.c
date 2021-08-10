@@ -69,7 +69,6 @@ static void	print_exp_env(char **env)
 		}
 		i++;
 	}
-	return ;
 }
 
 void	process_var(char *var)
@@ -87,14 +86,15 @@ void	process_var(char *var)
 	if (ft_split_count(key_value) > 1)
 		update_env(key, var + ft_strlen(key) + 1);
 	ft_split_free(key_value);
-	return ;
 }
 
-void	export(char **argv)
+void	export(t_process_info *info)
 {
-	int	i;
-	int	argv_size;
+	int		i;
+	int		argv_size;
+	char	**argv;
 
+	argv = info->argv;
 	argv_size = get_2d_array_size(argv);
 	if (argv_size == 1)
 	{
@@ -107,5 +107,4 @@ void	export(char **argv)
 		process_var(argv[i]);
 		i++;
 	}
-	return ;
 }

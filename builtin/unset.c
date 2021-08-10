@@ -12,11 +12,13 @@
 
 #include "basic_shell.h"
 
-void	unset(char **argv)
+void	unset(t_process_info *info)
 {
 	char	*value;
 	int		i;
+	char	**argv;
 
+	argv = info->argv;
 	i = 1;
 	while (argv && argv[i])
 	{

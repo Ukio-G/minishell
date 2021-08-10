@@ -21,5 +21,4 @@ void	pwd(void)
 	ft_putstr_fd("\n", 1);
 	if (buffer_pwd)
 		free(buffer_pwd);
-	return ;
 }

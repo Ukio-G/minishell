@@ -12,14 +12,14 @@
 
 size_t get_2d_array_size(char **array);
 int find_number_of_key(char *key);
-void echo (char **argv);
-void cd(char **argv);
+void echo (t_process_info *info);
+void cd(t_process_info *info);
 int	process_path(char **argv, char **current_path);
-void pwd();
-void export (char **argv);
-void unset(char **argv);
+void pwd(void);
+void export (t_process_info *info);
+void unset(t_process_info *info);
 void env(void);
-void ft_exit();
+void ft_exit(void);
 
 
 

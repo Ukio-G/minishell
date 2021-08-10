@@ -10,6 +10,7 @@ typedef struct s_process_info
 	int out_d;
 	pid_t pid;
 	int exit_code;
+	int is_builtin;
 } t_process_info;
 
 

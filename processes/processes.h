@@ -2,8 +2,9 @@
 #define MINISHELL_PROCESSES_H
 
 #include "../ft_vector/ft_vector.h"
+#include "command.h"
 
-#define NOT_SET -1234567
+#define NOT_SET (-1234567)
 
 t_process_info new_process_info(char *path, char **argv, char **envp);
 pid_t new_process(t_process_info info);

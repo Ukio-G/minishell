@@ -30,7 +30,6 @@ void	free_current_and_old_path(char *current_path, char *old_path)
 		free(current_path);
 	if (old_path)
 		free(old_path);
-	return ;
 }
 
 static void	pr_and_ret(char *msg, char *current_path, char *old_path)
@@ -42,7 +41,6 @@ static void	pr_and_ret(char *msg, char *current_path, char *old_path)
 	}
 	ft_putstr_fd(msg, 1);
 	free_current_and_old_path(current_path, old_path);
-	return ;
 }
 
 static void	change_and_update(char *current_path, char *old_path)
@@ -56,16 +54,17 @@ static void	change_and_update(char *current_path, char *old_path)
 	update_env("PWD", current_path);
 	update_env("OLDPWD", old_path);
 	free_current_and_old_path(current_path, old_path);
-	return ;
 }
 
-void	cd(char **argv)
+void	cd(t_process_info *info)
 {
 	char		*current_path;
 	char		*old_path;
 	struct stat	s;
 	mode_t		mode;
+	char		**argv;
 
+	argv = info->argv;
 	if (get_2d_array_size(argv) > 2)
 		return (pr_and_ret("minishell: cd: too many arguments\n", 0, 0));
 	old_path = find_env_by_key("PWD");

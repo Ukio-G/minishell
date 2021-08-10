@@ -25,5 +25,4 @@ void	env(void)
 		ft_putstr_fd("\n", 1);
 		i++;
 	}
-	return ;
 }

@@ -6,12 +6,11 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 13:03:36 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/09 23:06:37 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/10 16:36:23 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/fcntl.h>
-#include <readline/readline.h>
 #include "redirection.h"
 #include "shell_status.h"
 #include "preprocessor/preprocessor.h"

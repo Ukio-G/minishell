@@ -5,6 +5,7 @@
 #include <printf.h>
 #include <signal.h>
 #include <stdio.h>
+#include <file_utils.h>
 #include "../command.h"
 #include "processes.h"
 #include "../shell_status.h"
@@ -20,7 +21,6 @@ void print_process(t_process_info info)
 void create_process_set(t_ft_vector process_info_set)
 {
 	t_process_info *info;
-	printf("process_info_set size %i\n", (int)process_info_set.size);
 	while (ft_vector_iter(&process_info_set))
 	{
 		info = ft_vector_iter_value(&process_info_set);
@@ -38,7 +38,8 @@ void wait_all_processes(t_ft_vector process_info_set)
 	{
 		info = ft_vector_iter_value(&process_info_set);
 		close_all_pipes();
-		waitpid(info->pid, &info->exit_code, 0);
+		if (info->pid > 0)
+			waitpid(info->pid, &info->exit_code, 0);
 	}
 	close_redirects();
 }
@@ -46,6 +47,14 @@ void wait_all_processes(t_ft_vector process_info_set)
 pid_t new_process(t_process_info info)
 {
 	start_redirection();
+	if (info.is_builtin && (ft_strncmp(info.bin_path, "cd", 3) == 0 ||
+			(ft_strncmp(info.bin_path, "exit", 5) == 0) ||
+			(ft_strncmp(info.bin_path, "export", 7) == 0) ||
+			(ft_strncmp(info.bin_path, "unset", 6) == 0)))
+	{
+		exec_builtin(&info);
+		return 0;
+	}
 	pid_t new_pid = fork();
 	if (new_pid == 0)
 	{
@@ -58,7 +67,13 @@ pid_t new_process(t_process_info info)
 			dup2(info.out_d, STDOUT_FILENO);
 		}
 		close_all_pipes();
-		execve(info.bin_path, info.argv, info.envp);
+		if (!info.is_builtin)
+			execve(info.bin_path, info.argv, info.envp);
+		else
+		{
+			exec_builtin(&info);
+			exit(0);
+		}
 	}
 	return new_pid;
 }
@@ -85,5 +100,6 @@ t_process_info new_process_info(char *path, char **argv, char **envp)
 	result.envp = envp;
 	result.in_d = NOT_SET;
 	result.out_d = NOT_SET;
+	result.is_builtin = is_builtin(path);
 	return result;
 }
