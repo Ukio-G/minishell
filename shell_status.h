@@ -23,6 +23,7 @@ typedef struct		s_shell_status
 	int 			error;
 	int 			fd_wt;
 	int 			fd_rt;
+	int				return_code;
 }					t_shell_status;
 
 
