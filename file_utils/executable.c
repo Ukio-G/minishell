@@ -3,6 +3,7 @@
 #include "file_utils.h"
 #include "permission.h"
 #include <basic_shell.h>
+#include <printf.h>
 
 char *make_abs_path(char* path, char* filename)
 {
@@ -81,19 +82,20 @@ void exec_builtin(t_process_info *info)
 	char *cmd;
 
 	cmd = info->bin_path;
-	if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0)
+	printf("%s %i |%s|\n", __func__, __LINE__, cmd);
+	if (ft_strncmp("echo", cmd, 5) == 0)
 		echo(info);
-	if (ft_strncmp("cd", cmd, ft_strlen(cmd)) == 0)
+	if (ft_strncmp("cd", cmd, 3) == 0)
 		cd(info);
-	if (ft_strncmp("unset", cmd, ft_strlen(cmd)) == 0)
+	if (ft_strncmp("unset", cmd, 6) == 0)
 		unset(info);
-	if (ft_strncmp("pwd", cmd, ft_strlen(cmd)) == 0)
+	if (ft_strncmp("pwd", cmd, 4) == 0)
 		pwd();
-	if (ft_strncmp("env", cmd, ft_strlen(cmd)) == 0)
+	if (ft_strncmp("env", cmd, 4) == 0)
 		env();
-	if (ft_strncmp("export", cmd, ft_strlen(cmd)) == 0)
+	if (ft_strncmp("export", cmd, 7) == 0)
 		export(info);
-	if (ft_strncmp("exit", cmd, ft_strlen(cmd)) == 0)
+	if (ft_strncmp("exit", cmd, 5) == 0)
 		ft_exit();
 }
 
@@ -122,6 +124,8 @@ char *make_bin_path(char * input)
 t_executable_file_error is_correct_executable(char *cmd)
 {
 
+	if (*cmd == 0)
+		return E_FILE_CMD_NOT_FOUND;
 	if (is_builtin(cmd))
 		return E_FILE_NO_ERROR;
 
