@@ -47,7 +47,7 @@ static void	process_arg(char **argv, int n_flag)
 	}
 }
 
-void	echo(t_process_info *info)
+int	echo(t_process_info *info)
 {
 	int	n_flag;
 	char **argv;
@@ -55,7 +55,7 @@ void	echo(t_process_info *info)
 	argv = info->argv;
 	n_flag = 0;
 	if (!is_arg_exist(argv, &n_flag))
-		return ;
+		return (0);
 	if ((ft_strncmp(argv[1], "-n", ft_strlen(argv[1]))) == 0)
 	{
 		n_flag = 1;
@@ -64,4 +64,5 @@ void	echo(t_process_info *info)
 	process_arg(argv, n_flag);
 	if (!n_flag)
 		ft_putchar_fd('\n', 1);
+	return (0);
 }

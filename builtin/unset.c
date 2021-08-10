@@ -6,18 +6,20 @@
 /*   By: lweeper <lweeper@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 13:40:31 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/08 17:16:46 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/11 00:20:30 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "basic_shell.h"
 
-void	unset(t_process_info *info)
+int	unset(t_process_info *info)
 {
 	char	*value;
 	int		i;
 	char	**argv;
+	int		exit_status;
 
+	exit_status = 0;
 	argv = info->argv;
 	i = 1;
 	while (argv && argv[i])
@@ -29,7 +31,11 @@ void	unset(t_process_info *info)
 			free(value);
 		}
 		if (!is_valid_identifier(argv[i]))
+		{
 			print_error_msg("unset", argv[i], "not a valid identifier");
+			exit_status = 1;
+		}
 		i++;
 	}
+	return (exit_status);
 }

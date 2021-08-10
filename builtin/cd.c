@@ -6,7 +6,7 @@
 /*   By: lweeper <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 17:42:55 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/10 23:05:50 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/10 23:12:35 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int change_and_update(char *current_path, char *old_path)
 	return (0);
 }
 
-int cd(t_process_info *info)
+int	cd(t_process_info *info)
 {
 	char		*current_path;
 	char		*old_path;

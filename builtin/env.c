@@ -6,13 +6,13 @@
 /*   By: lweeper <lweeper@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 20:37:54 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/10 21:41:59 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/10 23:14:39 by lweeper          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "basic_shell.h"
 
-void	env(void)
+int	env(void)
 {
 	char	**temp;
 	int		i;
@@ -30,4 +30,5 @@ void	env(void)
 		ft_putstr_fd("\n", 1);
 		i++;
 	}
+	return (0);
 }

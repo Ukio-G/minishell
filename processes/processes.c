@@ -65,7 +65,6 @@ pid_t new_process(t_process_info info)
 	start_redirection();
 	if (info.is_builtin && (ft_strncmp(info.bin_path, "cd", 3) == 0 ||
 			(ft_strncmp(info.bin_path, "exit", 5) == 0) ||
-			(ft_strncmp(info.bin_path, "export", 7) == 0) ||
 			(ft_strncmp(info.bin_path, "unset", 6) == 0)))
 	{
 		exec_builtin(&info);
