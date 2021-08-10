@@ -23,7 +23,7 @@ char	*find_env_by_key(char *str)
 	while (envp && !result && *envp)
 	{
 		pair = ft_split(*envp, '=');
-		if (ft_strncmp(pair[0], str, ft_strlen(str)) == 0)
+		if (ft_strncmp(pair[0], str, ft_strlen(str) + 1) == 0)
 		{
 			result = ft_strdup(pair[1]);
 			ft_split_free(pair);
@@ -44,7 +44,7 @@ char	*find_env_by_invisible_key(char *str)
 	while (envp && !result && *envp)
 	{
 		pair = ft_split(*envp, '=');
-		if ((ft_strncmp(pair[0] + 1, str, ft_strlen(str)) == 0)
+		if ((ft_strncmp(pair[0] + 1, str, ft_strlen(str) + 1) == 0)
 			&& (*pair[0] == INVISIBLE_PREFIX))
 		{
 			result = ft_strdup(pair[1]);
@@ -81,8 +81,8 @@ int	find_number_of_key(char *key)
 	while (env[i])
 	{
 		pair = ft_split(env[i], '=');
-		if ((ft_strncmp(pair[0], key, ft_strlen(key)) == 0)
-			|| ((ft_strncmp(pair[0] + 1, key, ft_strlen(key)) == 0)
+		if ((ft_strncmp(pair[0], key, ft_strlen(key) + 1) == 0)
+			|| ((ft_strncmp(pair[0] + 1, key, ft_strlen(key) + 1) == 0)
 				&& (pair[0][0] == INVISIBLE_PREFIX)))
 		{
 			ft_split_free(pair);
