@@ -8,7 +8,7 @@ char	*make_abs_path(char* path, char* filename);
 char	*make_bin_path(char * input);
 void	create_empty_file(char *filename);
 int	is_builtin(char *cmd);
-void	exec_builtin(t_process_info *info);
+int exec_builtin(t_process_info *info);
 t_executable_file_error	is_correct_executable(char *cmd);
 int	is_directory(char *path);
 

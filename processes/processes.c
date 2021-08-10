@@ -51,11 +51,12 @@ void wait_all_processes(t_ft_vector process_info_set)
 	close_redirects();
 }
 
-void process_execve_errno(char *cmd)
+void process_execve_errno(t_process_info *info)
 {
 	if (errno == EACCES)
 	{
-		print_error(E_FILE_NO_PERMISSION, cmd);
+		info->error = E_FILE_NO_PERMISSION;
+		print_error(E_FILE_NO_PERMISSION, info->original_cmd_str);
 	}
 }
 
@@ -67,7 +68,7 @@ pid_t new_process(t_process_info info)
 			(ft_strncmp(info.bin_path, "exit", 5) == 0) ||
 			(ft_strncmp(info.bin_path, "unset", 6) == 0)))
 	{
-		exec_builtin(&info);
+		get_status()->return_code = exec_builtin(&info);
 		return 0;
 	}
 	pid_t new_pid = fork();
@@ -85,13 +86,13 @@ pid_t new_process(t_process_info info)
 		if (!info.is_builtin)
 		{
 			execve(info.bin_path, info.argv, info.envp);
-			process_execve_errno(info.bin_path);
+			if (info.error == NO_ERROR)
+				process_execve_errno(&info);
 			exit(code_from_error(info.error));
 		}
 		else
 		{
-			exec_builtin(&info);
-			exit(0);
+			exit(exec_builtin(&info));
 		}
 	}
 	return new_pid;

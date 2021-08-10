@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 12:31:21 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/10 22:34:33 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/11 01:45:10 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -590,7 +590,10 @@ char *preprocess(char *raw_input)
 	spaces = preprocess_spaces(pipes);
 	variables = preprocess_variables(spaces);
 	redirection = preprocess_redirection(variables);
-
+	if (*redirection == SPECIAL_PIPE)
+		print_pipe_error();
+	if (ft_strncmp(redirection, ".", 2) == 0)
+		print_dot_error();
 	DEBUG_PRINT_MACRO("Debug print pipes: |%s|\n", pipes);
 	DEBUG_PRINT_MACRO("Debug print spaces: |%s|\n", spaces);
 	DEBUG_PRINT_MACRO("Debug print variables: |%s|\n", variables);
