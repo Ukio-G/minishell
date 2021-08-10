@@ -66,22 +66,27 @@ int update_history(char *line) {
 
 t_process_info create_process_info(char * command)
 {
+	if (ft_strncmp(command, ".", 2) == 0)
+		return new_process_info(".", 0, 0);
 	char **processed_input = ft_split(command, SPECIAL_ARGS_DELIMITER);
-	char *bin_path;
+	t_executable_file_error file_error;
 	t_process_info info;
+	char *original_name;
+
 	int tokens = ft_split_count(processed_input);
 	if (tokens > 0)
 	{
-		bin_path = preprocess_argument(processed_input[0]);
-		free(processed_input[0]);
-		processed_input[0] = bin_path;
-		if (is_correct_executable(bin_path) == E_FILE_NO_ERROR)
-			info = new_process_info(make_bin_path(bin_path), processed_input, get_status()->envp);
+		original_name = preprocess_argument(processed_input[0]);
+		file_error = is_correct_executable(original_name);
+		if (file_error == E_FILE_NO_ERROR)
+			info = new_process_info(make_bin_path(original_name),
+									processed_input, get_status()->envp);
 		else
 		{
-			print_error(is_correct_executable(bin_path), bin_path);
-			info = new_process_info(bin_path, 0, 0);
+			print_error(file_error, original_name);
+			info = new_process_info(original_name, 0, 0);
 		}
+		info.original_cmd_str = original_name;
 		ft_split_free(processed_input);
 	}
 	return info;
@@ -96,7 +101,8 @@ t_ft_vector create_process_info_set(t_ft_vector commands_text)
 	while (ft_vector_iter(&commands_text))
 	{
 		tmp = create_process_info(*((char**)ft_vector_iter_value(&commands_text)));
-		ft_vector_add(&result, &tmp);
+		if (tmp.error != E_FILE_IS_DIRECTORY)
+			ft_vector_add(&result, &tmp);
 	}
 	return result;
 }

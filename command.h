@@ -7,6 +7,7 @@
 typedef struct s_process_info
 {
 	char *bin_path;
+	char *original_cmd_str;
 	char **argv;
 	char **envp;
 	int in_d;

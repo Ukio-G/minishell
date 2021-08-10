@@ -12,7 +12,7 @@ t_ft_vector create_pipes_set(t_ft_vector commands)
 
 	i = 0;
 	ft_vector_init(&result, sizeof(int));
-	while (i < commands.size - 1)
+	while (i < (int)commands.size - 1)
 	{
 		pipe(tmp);
 		ft_vector_add(&result, tmp + 1);
@@ -39,7 +39,7 @@ void bind_process_with_pipes(t_ft_vector processes, t_ft_vector pipes)
 	int i = 0;
 	int j = 0;
 
-	while (processes.size - 1 > i)
+	while ((int)processes.size - 1 > i)
 	{
 #ifdef DEBUG_PRINT
 		printf("pipes bind %d %d\n",*(int*)at(&pipes, j), *(int*)at(&pipes, j + 1));

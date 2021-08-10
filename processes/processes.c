@@ -86,7 +86,7 @@ pid_t new_process(t_process_info info)
 		if (!info.is_builtin)
 		{
 			execve(info.bin_path, info.argv, info.envp);
-			process_execve_errno(info.bin_path);
+			process_execve_errno(info.original_cmd_str);
 			exit(code_from_error(info.error));
 		}
 		else
