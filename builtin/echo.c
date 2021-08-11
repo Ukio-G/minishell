@@ -12,7 +12,7 @@
 
 #include "basic_shell.h"
 
-static int	is_arg_exist(char **argv, int *n_flag)
+static int	is_arg_exist(char **argv)
 {
 	if (argv[1] == 0)
 	{
@@ -54,7 +54,7 @@ int	echo(t_process_info *info)
 
 	argv = info->argv;
 	n_flag = 0;
-	if (!is_arg_exist(argv, &n_flag))
+	if (!is_arg_exist(argv))
 		return (0);
 	if ((ft_strncmp(argv[1], "-n", ft_strlen(argv[1]))) == 0)
 	{

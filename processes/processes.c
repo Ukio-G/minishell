@@ -97,12 +97,18 @@ t_process_info	new_process_info(char *path, char **argv, char **envp)
 {
 	t_process_info	result;
 
-	result.bin_path = path;
-	result.argv = preprocess_arguments(argv);
-	result.envp = envp;
+	if (!path)
+	{
+		result.in_d = NOT_SET;
+		result.out_d = NOT_SET;
+		return (result);
+	}
 	result.in_d = NOT_SET;
 	result.out_d = NOT_SET;
 	result.is_builtin = is_builtin(path);
 	result.error = is_correct_executable(path);
+	result.bin_path = path;
+	result.argv = preprocess_arguments(argv);
+	result.envp = envp;
 	return (result);
 }

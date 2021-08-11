@@ -38,7 +38,7 @@ static char	**sort_env(void)
 		while (j > i)
 		{
 			len = ft_strlen(temp[j]);
-			if (len < ft_strlen(temp[j - 1]))
+			if (len < (int)ft_strlen(temp[j - 1]))
 				len = ft_strlen(temp[j - 1]);
 			if (ft_strncmp(temp[j - 1], temp[j], len) > 0)
 				swap_string_in_array(&temp[j - 1], &temp[j]);

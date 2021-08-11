@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 11:59:50 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 12:05:14 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 12:59:44 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ t_process_info	create_process_info(char *command)
 	if (ft_strncmp(command, ".", 2) == 0)
 		return (new_process_info(".", 0, 0));
 	processed_input = ft_split(command, SPECIAL_ARGS_DELIMITER);
+	info = new_process_info(0, 0, 0);
 	if (ft_split_count(processed_input) > 0)
 	{
 		original_name = preprocess_argument(processed_input[0]);

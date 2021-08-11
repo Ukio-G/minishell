@@ -1,7 +1,7 @@
 all: libft.a libgnl.a minishell
 
 .PHONY: all
-CFLAGS = -Wextra -Wall -Werror
+CFLAGS = -DREADLINE_LIBRARY -Wextra -Wall -Werror
 INCLUDE = -I. -Irl -Ift_vector -Ilibft -Iget-next-line -Ierrors_printer -Ibuiltin -Ienv -Ifile_utils -Imain_functions -Ipipes -Ipreprocessor -Iprocesses -Iredirection -Ishell_status -Isignal
 
 # Create list of .obj files, based on .c files
@@ -20,9 +20,9 @@ SRC = main.c \
 	env/move_env.c \
 	env/update_env.c \
 	errors_printer/error_printer.c \
-	file_utlis/executable.c \
-	file_utlis/executable_1.c \
-	file_utlis/file_utlis.c \
+	file_utils/executable.c \
+	file_utils/executable_1.c \
+	file_utils/file_utils.c \
 	ft_vector/ft_vector.c \
 	ft_vector/ft_vector_2.c \
 	ft_vector/ft_vector_3.c \
@@ -47,7 +47,7 @@ SRC = main.c \
 
 HEADERS = builtin/basic_shell.h \
 	env/env_utils.h \
-	errors_printer/errors_printer.h \
+	errors_printer/error_printer.h \
 	file_utils/executable_file_error.h \
 	file_utils/file_utils.h \
 	file_utils/permission.h \
@@ -63,7 +63,6 @@ HEADERS = builtin/basic_shell.h \
 	rl/chardefs.h \
 	rl/colors.h \
 	rl/config.h \
-	rl/file \
 	rl/histlib.h \
 	rl/history.h \
 	rl/keymaps.h \
