@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/27 23:53:52 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 03:18:09 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 03:19:20 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ typedef struct s_ft_vector
 void				ft_vector_reallocate(t_ft_vector *vector);
 void				ft_vector_add(t_ft_vector *vector, void *data);
 void				ft_vector_init(t_ft_vector *vector, size_t elem_size);
-void				ft_vector_set_special_free(t_ft_vector *v, t_f_ptr f);
 void				*at(t_ft_vector *vector, size_t i);
 void				print_vector_error(const char *str);
 void				*ft_vector_iter(t_ft_vector *vector);
