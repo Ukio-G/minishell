@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 
 #ifndef SIGNAL_H
-#define SIGNAL_H
+# define SIGNAL_H
 
 void	s_ctrl_slash(void);
 void	s_ctrl_c(void);
 void	ctrl_d_handler(void);
-void	s_init();
+void	s_init(void);
 
 #endif

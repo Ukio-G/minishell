@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 02:45:53 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 02:58:35 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 11:06:02 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,10 @@ void	print_dot_error(void)
 	ft_putstr_fd("minishell: .: filename argument required\n", 1);
 	ft_putstr_fd(".: usage: . filename [arguments]\n", 1);
 	get_status()->return_code = 2;
+}
+
+void	print_input_redirect_error(char *filename)
+{
+	printf("minishell: %s: No such file or directory\n", filename);
+	get_status()->return_code = 1;
 }

@@ -20,5 +20,6 @@ void	print_error(t_executable_file_error file, char *path);
 int		code_from_error(t_executable_file_error file);
 void	print_pipe_error(void);
 void	print_dot_error(void);
+void	print_input_redirect_error(char *filename);
 
 #endif

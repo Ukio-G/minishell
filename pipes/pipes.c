@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <processes/processes.h>
 #include "libft.h"
 #include "pipes.h"
 #include "ft_vector/ft_vector.h"
@@ -63,4 +64,13 @@ void	bind_process_with_pipes(t_ft_vector processes, t_ft_vector pipes)
 		j += 2;
 		i++;
 	}
+}
+
+void	pipes_replace(t_process_info info)
+{
+	if (info.in_d != NOT_SET)
+		dup2(info.in_d, STDIN_FILENO);
+	if (info.out_d != NOT_SET)
+		dup2(info.out_d, STDOUT_FILENO);
+	close_all_pipes();
 }

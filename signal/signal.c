@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 02:48:40 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 02:54:23 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 11:32:57 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	s_ctrl_slash(void)
 
 void	s_ctrl_c(void)
 {
-	int pid;
+	int	pid;
+
 	pid = waitpid(-1, NULL, WNOHANG);
 	if (pid)
 	{
@@ -42,7 +43,7 @@ void	ctrl_d_handler(void)
 	exit(0);
 }
 
-void s_init()
+void	s_init(void)
 {
 	signal(SIGQUIT, (void *)s_ctrl_slash);
 	signal(SIGINT, (void *)s_ctrl_c);

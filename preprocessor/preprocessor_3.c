@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 03:25:36 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 03:25:36 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 10:53:53 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@
  * |
  * redrection_position
  */
-char *rarg_start(char *redirection_position)
+char	*rarg_start(char *redirection_position)
 {
-	char *start;
+	char	*start;
 
 	start = redirection_position;
 	start += (*start == start[1]);
@@ -46,7 +46,7 @@ char *rarg_start(char *redirection_position)
 			start = 0;
 	}
 	start += (*start == ' ');
-	return start;
+	return (start);
 }
 
 /*
@@ -59,14 +59,14 @@ char *rarg_start(char *redirection_position)
  *                                                     |
  *                              rarg_end(redirection_position, source)
  */
-char *rarg_end(char *redirection_position, char *source)
+char	*rarg_end(char *redirection_position, char *source)
 {
-	char *start;
-	char *end;
+	char	*start;
+	char	*end;
 
 	start = rarg_start(redirection_position);
 	if (!start)
-		return 0;
+		return (0);
 	end = ft_strpbrk2(start, "\02><");
 	while (*end && is_escaped(end, source, "\'\""))
 	{
@@ -75,15 +75,14 @@ char *rarg_end(char *redirection_position, char *source)
 	end -= ft_isinset(*end, "\02><");
 	while (*end == '\0')
 		end--;
-	return end;
+	return (end);
 }
-
 
 /*
  * Set substring - pair pointer to start and end of redirection's argument
  * Obtains array of 2 char*, where will written result, and redirection position
  */
-void rarg_substring(char *substring[2], char *start)
+void	rarg_substring(char *substring[2], char *start)
 {
 	substring[0] = rarg_start(start);
 	substring[1] = rarg_end(start, start);
@@ -102,9 +101,9 @@ void rarg_substring(char *substring[2], char *start)
  *                                      |
  *                      redirections[LAST_OUT]
  */
-void find_last_redirection(char *redirections[3], char *source)
+void	find_last_redirection(char *redirections[3], char *source)
 {
-	char *redirection;
+	char	*redirection;
 
 	redirection = ft_strpbrk2(source, "><");
 	while (redirection && *redirection)
@@ -115,7 +114,8 @@ void find_last_redirection(char *redirections[3], char *source)
 				redirections[LAST_OUT] = redirection;
 			else if (*redirection == '<')
 				redirections[LAST_IN] = redirection;
-			redirection += (redirection[1] == '>') + (redirection[1] == '<') + 1;
+			redirection += (redirection[1] == '>')
+				+ (redirection[1] == '<') + 1;
 			redirection = ft_strpbrk2(redirection, "><");
 		}
 		else
@@ -143,9 +143,9 @@ void find_last_redirection(char *redirections[3], char *source)
  *                                            |
  *                    redirections[END_REDIRECTIONS_STRING]
  */
-void find_end_redirection_string(char *redirections[3], char *source)
+void	find_end_redirection_string(char *redirections[3], char *source)
 {
-	char *end;
+	char	*end;
 
 	if (redirections[LAST_IN] > redirections[LAST_OUT])
 		end = redirections[LAST_IN];
@@ -153,4 +153,3 @@ void find_end_redirection_string(char *redirections[3], char *source)
 		end = redirections[LAST_OUT];
 	redirections[END_REDIRECTIONS_STRING] = rarg_end(end, source);
 }
-

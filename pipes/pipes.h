@@ -19,5 +19,6 @@
 t_ft_vector	create_pipes_set(t_ft_vector commands);
 void		bind_process_with_pipes(t_ft_vector processes, t_ft_vector pipes);
 void		close_all_pipes(void);
+void		pipes_replace(t_process_info info);
 
 #endif

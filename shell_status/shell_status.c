@@ -6,16 +6,17 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 02:50:54 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 02:50:54 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 11:31:04 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "shell_status.h"
 #include "env_utils.h"
 
-t_shell_status *init_status(char **argv, char **envp)
+t_shell_status	*init_status(char **argv, char **envp)
 {
-	static t_shell_status status;
+	static t_shell_status	status;
+
 	if (argv && envp)
 	{
 		status.argv = argv;
@@ -28,10 +29,10 @@ t_shell_status *init_status(char **argv, char **envp)
 		status.uid = 1000;
 		status.gid = 1000;
 	}
-	return &status;
+	return (&status);
 }
 
-t_shell_status *get_status()
+t_shell_status	*get_status(void)
 {
-	return init_status(0, 0);
+	return (init_status(0, 0));
 }
