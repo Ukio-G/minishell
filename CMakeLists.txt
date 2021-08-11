@@ -17,17 +17,26 @@ add_executable(minishell
         ${BUILTIN}
         main.c
         processes/processes.c
-        shell_status.c
+        shell_status/shell_status.c
         file_utils/executable.c
         file_utils/file_utils.c
         pipes/pipes.c
         errors_printer/error_printer.c
-        signals/signals_handler.c
         preprocessor/preprocessor.c
-        test_preprocessor.c
         redirection/redirection.c
         redirection/heredoc.c
         signal/signal.c
+        file_utils/executable_1.c
+        preprocessor/preprocessor_1.c
+        preprocessor/preprocessor_2.c
+        preprocessor/preprocessor_3.c
+        preprocessor/preprocessor_4.c
+        preprocessor/preprocessor_loops.c
+        processes/processes_1.c
+        redirection/redirection_1.c
+        redirection/redirection_2.c
+        main_functions/main_functions.c
+        main_functions/main_functions_1.c
         )
 
 include_directories(libft get-next-line . env builtin file_utils rl)
