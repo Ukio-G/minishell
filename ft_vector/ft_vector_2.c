@@ -6,13 +6,13 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/27 23:01:35 by atawana           #+#    #+#             */
-/*   Updated: 2021/03/27 23:49:32 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 03:15:35 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_vector.h"
 
-void			print_vector_error(const char *str)
+void	print_vector_error(const char *str)
 {
 	if (LOG_ERRORS)
 	{
@@ -22,7 +22,7 @@ void			print_vector_error(const char *str)
 	}
 }
 
-void			*at(t_ft_vector *vector, size_t i)
+void	*at(t_ft_vector *vector, size_t i)
 {
 	void		*result;
 
@@ -37,9 +37,9 @@ void			*at(t_ft_vector *vector, size_t i)
 	return (result);
 }
 
-void			ft_vector_add(t_ft_vector *vector, void *data)
+void	ft_vector_add(t_ft_vector *vector, void *data)
 {
-	void *new_element_addr;
+	void	*new_element_addr;
 
 	if (vector->allocated <= vector->size)
 	{

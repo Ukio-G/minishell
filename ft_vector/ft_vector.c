@@ -6,20 +6,23 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/27 23:42:49 by atawana           #+#    #+#             */
-/*   Updated: 2021/03/27 23:44:30 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 03:15:05 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_vector.h"
 
-void		ft_vector_reallocate(t_ft_vector *vector)
+void	ft_vector_reallocate(t_ft_vector *vector)
 {
 	void	*new_data;
 	size_t	new_size;
 	size_t	old_size;
 
 	old_size = vector->allocated * vector->element_size;
-	new_size = (old_size == 0) ? 10 * vector->element_size : old_size * 2;
+	if (old_size == 0)
+		new_size = 10 * vector->element_size;
+	else
+		new_size = old_size * 2;
 	new_data = malloc(new_size);
 	if (!new_data)
 	{
@@ -37,7 +40,7 @@ void		ft_vector_reallocate(t_ft_vector *vector)
 	vector->data = new_data;
 }
 
-void		ft_vector_iter_reset(t_ft_vector *vector)
+void	ft_vector_iter_reset(t_ft_vector *vector)
 {
 	if (vector->size > 0)
 		vector->iterator = vector->data;
@@ -46,9 +49,9 @@ void		ft_vector_iter_reset(t_ft_vector *vector)
 	vector->iterator_idx = 0;
 }
 
-void		ft_vector_iter_increment(t_ft_vector *vector)
+void	ft_vector_iter_increment(t_ft_vector *vector)
 {
-	size_t max_idx;
+	size_t	max_idx;
 
 	max_idx = vector->size - 1;
 	if (max_idx < vector->iterator_idx + 1)
@@ -63,7 +66,7 @@ void		ft_vector_iter_increment(t_ft_vector *vector)
 	}
 }
 
-void		*ft_vector_iter_value(t_ft_vector *vector)
+void	*ft_vector_iter_value(t_ft_vector *vector)
 {
 	if (vector->iterator && vector->data)
 		return (vector->iterator);
@@ -72,7 +75,7 @@ void		*ft_vector_iter_value(t_ft_vector *vector)
 	return (0);
 }
 
-void		*ft_vector_iter(t_ft_vector *vector)
+void	*ft_vector_iter(t_ft_vector *vector)
 {
 	if (vector->data != 0 && vector->iterator == 0)
 	{

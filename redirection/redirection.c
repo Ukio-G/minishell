@@ -12,7 +12,7 @@
 
 #include <sys/fcntl.h>
 #include "redirection.h"
-#include "shell_status.h"
+#include "shell_status/shell_status.h"
 #include "preprocessor/preprocessor.h"
 
 void create_heredoc();

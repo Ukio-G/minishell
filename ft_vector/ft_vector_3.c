@@ -6,18 +6,17 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/27 23:02:02 by atawana           #+#    #+#             */
-/*   Updated: 2021/03/27 23:52:47 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 03:19:04 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_vector.h"
 
-void		ft_vector_init(t_ft_vector *vector, size_t elem_size)
+void	ft_vector_init(t_ft_vector *vector, size_t elem_size)
 {
 	vector->allocated = 0;
 	vector->size = 0;
 	vector->data = 0;
-	vector->special_free = 0;
 	vector->error = NO_ERROR;
 	vector->element_size = elem_size;
 	ft_vector_reallocate(vector);
@@ -25,10 +24,8 @@ void		ft_vector_init(t_ft_vector *vector, size_t elem_size)
 	ft_vector_iter_reset(vector);
 }
 
-void		ft_vector_free(t_ft_vector *vector)
+void	ft_vector_free(t_ft_vector *vector)
 {
-	if (vector->special_free != 0)
-		vector->special_free(vector);
 	vector->allocated = 0;
 	vector->size = 0;
 	if (vector->data)
@@ -36,7 +33,7 @@ void		ft_vector_free(t_ft_vector *vector)
 	vector->data = 0;
 }
 
-void		ft_vector_remove_at(t_ft_vector *vector, size_t i)
+void	ft_vector_remove_at(t_ft_vector *vector, size_t i)
 {
 	void	*dst;
 	void	*src;
@@ -62,12 +59,12 @@ void		ft_vector_remove_at(t_ft_vector *vector, size_t i)
 	}
 }
 
-void		ft_vector_remove_last(t_ft_vector *vector)
+void	ft_vector_remove_last(t_ft_vector *vector)
 {
 	ft_vector_remove_at(vector, vector->size - 1);
 }
 
-void		ft_vector_remove_first(t_ft_vector *vector)
+void	ft_vector_remove_first(t_ft_vector *vector)
 {
 	ft_vector_remove_at(vector, 0);
 }

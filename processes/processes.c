@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   processes.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/08/11 02:48:04 by atawana           #+#    #+#             */
+/*   Updated: 2021/08/11 02:48:04 by atawana          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -11,7 +23,7 @@
 #include <env_utils.h>
 #include "../command.h"
 #include "processes.h"
-#include "../shell_status.h"
+#include "shell_status/shell_status.h"
 #include "../pipes/pipes.h"
 #include "../preprocessor/preprocessor.h"
 

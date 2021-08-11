@@ -1,37 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   file_utils.c                                       :+:      :+:    :+:   */
+/*   shell_status.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/11 02:46:18 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 03:11:07 by atawana          ###   ########.fr       */
+/*   Created: 2021/08/11 02:50:54 by atawana           #+#    #+#             */
+/*   Updated: 2021/08/11 02:50:54 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "permission.h"
-#include "shell_status/shell_status.h"
-#include <sys/stat.h>
-#include <fcntl.h>
+#include "shell_status.h"
+#include "env_utils.h"
 
-int	is_file_exist(char *filename)
+t_shell_status *init_status(char **argv, char **envp)
 {
-	struct stat	s;
-
-	return (stat(filename, &s) == 0);
+	static t_shell_status status;
+	if (argv && envp)
+	{
+		status.argv = argv;
+		status.envp = envp;
+		if (status.home)
+		{
+			free(status.home);
+		}
+		status.home = find_env_by_key("HOME");
+		status.uid = 1000;
+		status.gid = 1000;
+	}
+	return &status;
 }
 
-int	is_directory(char *path)
+t_shell_status *get_status()
 {
-	struct stat	s;
-	mode_t		mode;
-
-	if (!is_file_exist(path))
-		return (0);
-	stat(path, &s);
-	mode = (s.st_mode >> (3 * 4)) << (3 * 4);
-	if (mode == S_IFDIR)
-		return (1);
-	return (0);
+	return init_status(0, 0);
 }

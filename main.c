@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/08/11 02:49:48 by atawana           #+#    #+#             */
+/*   Updated: 2021/08/11 02:49:48 by atawana          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+#include "rl/readline.h"
+#include "rl/history.h"
 #include <stdlib.h>
 #include "libft.h"
 #include "get_next_line.h"
@@ -8,7 +20,7 @@
 #include <errno.h>
 #include <signal/signal.h>
 #include <errors_printer/error_printer.h>
-#include "shell_status.h"
+#include "shell_status/shell_status.h"
 #include "command.h"
 #include "env_utils.h"
 #include "file_utils.h"
@@ -178,17 +190,12 @@ void input_loop()
 	}
 }
 
-void test_preprocessor();
-
 void startup_init(char ** argv, char **envp)
 {
 	s_init();
 	init_status(argv, copy_env(envp));
 	setup_history();
 	update_env("?", "0");
-#ifdef TEST_PREPROCESSOR
-	test_preprocessor();
-#endif
 }
 
 int main(int argc, char ** argv, char **envp)

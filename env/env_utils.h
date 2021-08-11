@@ -15,7 +15,7 @@
 
 # define INT_MIN_MINISHELL -2147483646
 # define INVISIBLE_PREFIX '\03'
-# include "shell_status.h"
+# include "shell_status/shell_status.h"
 # include "libft.h"
 # include <stdlib.h>
 

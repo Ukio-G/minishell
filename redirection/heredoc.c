@@ -1,4 +1,16 @@
-#include <shell_status.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/08/11 02:48:11 by atawana           #+#    #+#             */
+/*   Updated: 2021/08/11 02:48:11 by atawana          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <shell_status/shell_status.h>
 #include <readline/readline.h>
 #include <sys/fcntl.h>
 #include "redirection.h"
