@@ -64,7 +64,6 @@ void	expand_variable(char **source, char *pos[3], char *v[2])
 	pos[W_POS] += (pos[D_POS] - pos[R_POS]);
 	v[V_NAME] = variable_name(*source, pos[D_POS]);
 	v[V_VAL] = find_env_by_key(v[V_NAME]);
-	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  v[V_VAL]);
 	ft_memcpy(pos[W_POS], v[V_VAL], ft_strlen(v[V_VAL]));
 	pos[W_POS] += ft_strlen(v[V_VAL]);
 	pos[R_POS] += ft_strlen(v[V_NAME]) + (pos[D_POS] - pos[R_POS]) + 1;
@@ -79,7 +78,6 @@ char	*preprocess_variables(char *source)
 	char	*v[2];
 
 	result = ft_calloc(1, (size_t) expanded_string_length(source) + 2);
-	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
 	pos[W_POS] = result;
 	pos[R_POS] = source;
 	pos[D_POS] = ft_strchr2(source, '$');

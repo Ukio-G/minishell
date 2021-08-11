@@ -27,7 +27,6 @@ t_shell_status	*init_status(char **argv, char **envp)
 			free(status.home);
 		}
 		status.home = find_env_by_key("HOME");
-		printf("LEAK %s:%i %p\n", __FILE__, __LINE__, status.home);
 		status.uid = 1000;
 		status.gid = 1000;
 	}

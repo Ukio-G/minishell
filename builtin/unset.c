@@ -26,8 +26,6 @@ int	unset(t_process_info *info)
 	while (argv && argv[i])
 	{
 		value = find_env_by_key(argv[i]);
-		printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  value);
-
 		if (value)
 		{
 			remove_env(argv[i]);

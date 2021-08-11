@@ -6,7 +6,7 @@
 /*   By: lweeper <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/07 17:42:55 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/11 02:00:41 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/11 15:44:43 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,10 @@ int	cd(t_process_info *info)
 	mode_t		mode;
 
 	old_path = find_env_by_key("PWD");
-	printf("LEAK %s:%i %p\n", __FILE__, __LINE__, old_path);
-
 	if ((get_2d_array_size(info->argv) == 1) || (ft_strncmp("--", info->argv[1],
 				biggest_len("--", info->argv[1])) == 0))
 	{
 		current_path = find_env_by_key("HOME");
-		printf("LEAK %s:%i %p\n", __FILE__, __LINE__, current_path);
 		return (change_and_update(current_path, old_path));
 	}
 	if (process_path(info->argv, &current_path) == -1)

@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 12:00:19 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 14:06:09 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 15:44:43 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ t_ft_vector	create_process_string_set(char *processed_input)
 	char		**splitted_by_pipe;
 
 	splitted_by_pipe = ft_split(processed_input, SPECIAL_PIPE);
-	print_split_leak((void**)splitted_by_pipe, __LINE__, __FILE__);
-
 	ft_vector_init(&result, sizeof(char *));
 	while (*splitted_by_pipe)
 	{
@@ -31,7 +29,8 @@ t_ft_vector	create_process_string_set(char *processed_input)
 
 void	process_commands(char *line)
 {
-	char *tmp_leak;
+	char	*tmp_leak;
+
 	get_status()->processed_input = process_input(line);
 	get_status()->process_string_set = create_process_string_set(get_status
 		()->processed_input);

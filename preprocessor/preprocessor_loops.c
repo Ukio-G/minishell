@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 10:36:29 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 13:18:25 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 13:48:24 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ int	expanded_variables_length_loop(char *dollar_position,
 	{
 		v[V_NAME] = variable_name(start_position, dollar_position);
 		v[V_VAL] = find_env_by_key(v[V_NAME]);
-		printf("LEAK %s:%i %p\n", __FILE__, __LINE__, v[V_VAL]);
 		variable_len = (int) ft_strlen(v[V_NAME]);
 		*result += (int) ft_strlen(v[V_VAL]);
 		free(v[V_NAME]);

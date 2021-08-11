@@ -6,7 +6,7 @@
 /*   By: lweeper <lweeper@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 20:01:57 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/11 13:48:24 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 15:44:43 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,9 @@ char	*find_env_by_key(char *str)
 	while (envp && !result && *envp)
 	{
 		pair = ft_split(*envp, '=');
-		print_split_leak((void**)pair, __LINE__, __FILE__);
 		if (ft_strncmp(pair[0], str, ft_strlen(str) + 1) == 0)
 		{
 			result = ft_strdup(pair[1]);
-			printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
 		}
 		ft_split_free(pair);
 		envp++;
@@ -48,13 +46,10 @@ char	*find_env_by_invisible_key(char *str)
 	while (envp && !result && *envp)
 	{
 		pair = ft_split(*envp, '=');
-		print_split_leak((void**)pair, __LINE__, __FILE__);
-
 		if ((ft_strncmp(pair[0] + 1, str, ft_strlen(str) + 1) == 0)
 			&& (*pair[0] == INVISIBLE_PREFIX))
 		{
 			result = ft_strdup(pair[1]);
-			printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
 			ft_split_free(pair);
 		}
 		envp++;
@@ -69,8 +64,6 @@ int	get_int_from_env(char *key)
 
 	result = INT_MIN_MINISHELL;
 	tmp = find_env_by_key(key);
-	printf("LEAK %s:%i %p\n", __FILE__, __LINE__, tmp);
-
 	if (tmp)
 	{
 		result = ft_atoi(tmp);
@@ -90,8 +83,6 @@ int	find_number_of_key(char *key)
 	while (env[i])
 	{
 		pair = ft_split(env[i], '=');
-		print_split_leak((void**)pair, __LINE__, __FILE__);
-
 		if ((ft_strncmp(pair[0], key, ft_strlen(key) + 1) == 0)
 			|| ((ft_strncmp(pair[0] + 1, key, ft_strlen(key) + 1) == 0)
 				&& (pair[0][0] == INVISIBLE_PREFIX)))

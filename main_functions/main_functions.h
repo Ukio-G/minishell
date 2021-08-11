@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 11:59:02 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 14:06:09 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 15:44:43 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,5 @@ void			process_commands(char *line);
 t_ft_vector		create_process_string_set(char *processed_input);
 void			clean_processes_info(void);
 void			clean_process_info(t_process_info *info);
-void			print_split_leak(void **ptr, int line, char *filename);
-
 
 #endif

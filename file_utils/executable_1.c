@@ -14,7 +14,7 @@
 
 t_executable_file_error	is_correct_executable(char *cmd)
 {
-	char *tmp;
+	char	*tmp;
 
 	if (*cmd == 0)
 		return (E_FILE_CMD_NOT_FOUND);

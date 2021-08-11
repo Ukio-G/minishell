@@ -18,7 +18,6 @@ void	add_if_is(char *key, char *value, int key_num, int update_len)
 	char	*upd_str;
 
 	upd_str = (char *)malloc(update_len);
-	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  upd_str);
 	ft_memcpy(upd_str, key, ft_strlen(key));
 	upd_str[ft_strlen(key)] = '=';
 	ft_memcpy(upd_str + ft_strlen(key) + 1, value, ft_strlen(value));
@@ -35,18 +34,15 @@ void	add_if_not(char *key, char *value, int update_len, int size)
 
 	i = 0;
 	upd_env = malloc((size + 2) * sizeof(char *));
-	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  upd_env);
 	if (upd_env)
 	{
 		while (i < size)
 		{
 			upd_env[i] = ft_strdup(get_status()->envp[i]);
-			printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  upd_env[i]);
 			free(get_status()->envp[i]);
 			i++;
 		}
 		upd_str = (char *) malloc(update_len);
-		printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  upd_str);
 		ft_memcpy(upd_str, key, ft_strlen(key));
 		upd_str[ft_strlen(key)] = '=';
 		ft_memcpy(upd_str + ft_strlen(key) + 1, value, ft_strlen(value));
