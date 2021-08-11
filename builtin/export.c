@@ -6,10 +6,11 @@
 /*   By: lweeper <lweeper@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 12:51:04 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/11 00:36:48 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/11 15:38:53 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <main_functions/main_functions.h>
 #include "basic_shell.h"
 
 static void	swap_string_in_array(char **s1, char **s2)
@@ -61,6 +62,7 @@ static void	print_exp_env(char **env)
 		{
 			ft_putstr_fd("declare -x ", 1);
 			pair = ft_split(env[i], '=');
+			print_split_leak((void**)pair, __LINE__, __FILE__);
 			ft_putstr_fd(pair[0], 1);
 			if (pair[1] == NULL)
 			{
@@ -82,6 +84,8 @@ int	process_var(char *var)
 	char	*key;
 
 	key_value = ft_split(var, '=');
+	print_split_leak((void**)key_value, __LINE__, __FILE__);
+
 	key = key_value[0];
 	if (!is_valid_identifier(key))
 	{

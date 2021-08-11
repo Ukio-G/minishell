@@ -39,6 +39,7 @@ typedef struct s_ft_vector
 void				ft_vector_reallocate(t_ft_vector *vector);
 void				ft_vector_add(t_ft_vector *vector, void *data);
 void				ft_vector_init(t_ft_vector *vector, size_t elem_size);
+void				ft_vector_free(t_ft_vector *vector);
 void				*at(t_ft_vector *vector, size_t i);
 void				print_vector_error(const char *str);
 void				*ft_vector_iter(t_ft_vector *vector);

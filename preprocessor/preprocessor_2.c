@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 03:25:30 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 10:52:01 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 13:23:16 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ char	*preprocess_argument(char *argument)
 	char	*pos[2];
 
 	result = ft_calloc(1, 2 + ft_strlen(argument));
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
+
 	pos[W_POS] = result;
 	pos[R_POS] = argument;
 	substr[0] = ft_strpbrk(argument, "\"\'");
@@ -50,6 +52,7 @@ char	**preprocess_arguments(char **argv)
 	i = 0;
 	argc_count = ft_split_count(argv);
 	result = malloc((argc_count + 1) * sizeof(char *));
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
 	while (argv[i])
 	{
 		result[i] = preprocess_argument(argv[i]);
@@ -96,6 +99,8 @@ char	*variable_name(char *start_position, char *dollar_position)
 		return (0);
 	length = variable_length(dollar_position);
 	result = ft_calloc(length, 1);
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
+
 	ft_slice_cpy(result, dollar_position + 1, dollar_position + length - 1);
 	return (result);
 }

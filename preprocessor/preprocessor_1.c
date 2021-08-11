@@ -74,6 +74,7 @@ char	*preprocess_pipes(char *source)
 	char	*result;
 
 	result = ft_strdup(source);
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
 	if (!result)
 	{
 		exit(MINISHELL_MEMORY_ERROR);
@@ -96,6 +97,8 @@ char	*preprocess_spaces(char *source)
 	char	*result;
 
 	result = ft_strdup(source);
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
+
 	if (!result)
 	{
 		exit(MINISHELL_MEMORY_ERROR);

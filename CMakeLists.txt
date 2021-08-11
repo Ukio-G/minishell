@@ -37,6 +37,7 @@ add_executable(minishell
         redirection/redirection_2.c
         main_functions/main_functions.c
         main_functions/main_functions_1.c
+        main_functions/clean_process_info.c
         )
 
 include_directories(libft get-next-line . env builtin file_utils rl)

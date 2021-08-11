@@ -97,12 +97,8 @@ t_process_info	new_process_info(char *path, char **argv, char **envp)
 {
 	t_process_info	result;
 
-	if (!path)
-	{
-		result.in_d = NOT_SET;
-		result.out_d = NOT_SET;
-		return (result);
-	}
+	result.in_d = NOT_SET;
+	result.out_d = NOT_SET;
 	result.in_d = NOT_SET;
 	result.out_d = NOT_SET;
 	result.is_builtin = is_builtin(path);

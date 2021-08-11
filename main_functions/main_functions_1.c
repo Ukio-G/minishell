@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 12:00:19 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 12:07:22 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 14:06:09 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,9 @@ t_ft_vector	create_process_string_set(char *processed_input)
 	char		**splitted_by_pipe;
 
 	splitted_by_pipe = ft_split(processed_input, SPECIAL_PIPE);
+	print_split_leak((void**)splitted_by_pipe, __LINE__, __FILE__);
+
 	ft_vector_init(&result, sizeof(char *));
-	if (!splitted_by_pipe)
-	{
-		printf("Malloc error\n");
-		exit(1);
-	}
 	while (*splitted_by_pipe)
 	{
 		ft_vector_add(&result, splitted_by_pipe);
@@ -34,6 +31,7 @@ t_ft_vector	create_process_string_set(char *processed_input)
 
 void	process_commands(char *line)
 {
+	char *tmp_leak;
 	get_status()->processed_input = process_input(line);
 	get_status()->process_string_set = create_process_string_set(get_status
 		()->processed_input);
@@ -45,7 +43,9 @@ void	process_commands(char *line)
 		()->pipes_set);
 	create_process_set(get_status()->process_info_set);
 	wait_all_processes(get_status()->process_info_set);
-	update_env("?", ft_itoa(get_status()->return_code));
+	tmp_leak = ft_itoa(get_status()->return_code);
+	update_env("?", tmp_leak);
+	clean_processes_info();
 }
 
 void	input_loop(void)

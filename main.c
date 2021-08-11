@@ -15,6 +15,11 @@
 int	main(int c, char **argv, char **envp)
 {
 	(void)c;
+	int i = 0;
+	while (envp[i])
+	{
+		printf("ENVP ADDR: %p\n", envp[i++]);
+	}
 	startup_init(argv, envp);
 	while (1)
 	{

@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 11:59:50 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 12:59:44 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 13:48:24 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	setup_history(void)
 	if (!home_path)
 		return (NO_HOME_PATH);
 	history_file_path = ft_strjoin(home_path, "/.minishell");
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  history_file_path);
 	fd = open(history_file_path, O_RDONLY);
 	if (fd < 0)
 	{
@@ -50,6 +51,7 @@ int	update_history(char *line)
 	if (!home_path)
 		return (NO_HOME_PATH);
 	history_file_path = ft_strjoin(home_path, "/.minishell");
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  history_file_path);
 	fd = open(history_file_path, O_WRONLY | O_APPEND | O_CREAT, 0777);
 	if (fd < 0)
 	{
@@ -73,7 +75,9 @@ t_process_info	create_process_info(char *command)
 	if (ft_strncmp(command, ".", 2) == 0)
 		return (new_process_info(".", 0, 0));
 	processed_input = ft_split(command, SPECIAL_ARGS_DELIMITER);
-	info = new_process_info(0, 0, 0);
+	print_split_leak((void**)processed_input, __LINE__, __FILE__);
+
+	info.pid = 0;
 	if (ft_split_count(processed_input) > 0)
 	{
 		original_name = preprocess_argument(processed_input[0]);
@@ -87,8 +91,8 @@ t_process_info	create_process_info(char *command)
 			info = new_process_info(original_name, 0, 0);
 		}
 		info.original_cmd_str = original_name;
-		ft_split_free(processed_input);
 	}
+	ft_split_free(processed_input);
 	return (info);
 }
 

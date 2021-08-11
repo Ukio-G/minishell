@@ -6,10 +6,11 @@
 /*   By: lweeper <lweeper@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/08 12:30:53 by lweeper           #+#    #+#             */
-/*   Updated: 2021/08/11 01:57:54 by lweeper          ###   ########.fr       */
+/*   Updated: 2021/08/11 13:17:18 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <printf.h>
 #include "basic_shell.h"
 
 int	process_tilda(char **argv, char **current_path)
@@ -18,8 +19,12 @@ int	process_tilda(char **argv, char **current_path)
 	char	*home;
 
 	home = find_env_by_key("HOME");
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__, home);
 	if (!home)
+	{
 		home = find_env_by_invisible_key("HOME");
+		printf("LEAK %s:%i %p\n", __FILE__, __LINE__, home);
+	}
 	if ((ft_strncmp("~", argv[1], ft_strlen(argv[1])) == 0)
 		|| (ft_strncmp("~/", argv[1], ft_strlen(argv[1])) == 0))
 	{
@@ -31,6 +36,7 @@ int	process_tilda(char **argv, char **current_path)
 		if (argv[1][ft_strlen(argv[1]) - 1] == '/')
 			argv[1][ft_strlen(argv[1]) - 1] = '\0';
 		temp = malloc((int)ft_strlen(home) + (int)ft_strlen(argv[1]));
+		printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  temp);
 		ft_memcpy(temp, home, ft_strlen(home));
 		ft_memcpy(temp + ft_strlen(home), argv[1] + 1, ft_strlen(argv[1] + 1));
 		temp[(int)ft_strlen(home) + (int)ft_strlen(argv[1])] = '\0';
@@ -50,6 +56,7 @@ int	process_path(char **argv, char **current_path)
 	if (argv[1][0] == '-' && ft_strlen(argv[1]) == 1)
 	{
 		oldpwd = find_env_by_key("OLDPWD");
+		printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  oldpwd);
 		if (oldpwd == 0)
 		{
 			ft_putstr_fd("minishell: cd: OLDPWD not set\n", 1);
@@ -60,5 +67,6 @@ int	process_path(char **argv, char **current_path)
 		return (0);
 	}
 	*current_path = ft_strdup(argv[1]);
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  *current_path);
 	return (0);
 }

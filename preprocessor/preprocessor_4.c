@@ -26,6 +26,7 @@ char	*redirection_argument_new(char *redirection)
 	if (!substring[0] || !substring[1])
 		return (0);
 	result = ft_calloc((substring[1] - substring[0]) + 2, 1);
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
 	if (result)
 		ft_slice_cpy(result, substring[0], substring[1]);
 	return (result);
@@ -66,6 +67,7 @@ char	*preprocess_redirection(char *source)
 	char	*redirection[3];
 
 	result = ft_strdup(source);
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
 	ft_memset(redirection, 0, sizeof(void *) * 3);
 	find_last_redirection(redirection, result);
 	set_status_redirection(redirection);

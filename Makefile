@@ -29,6 +29,7 @@ SRC = main.c \
 	ft_vector/ft_vector_4.c \
 	main_functions/main_functions.c \
 	main_functions/main_functions_1.c \
+	main_functions/clean_process_info.c \
 	pipes/pipes.c \
 	preprocessor/preprocessor.c \
 	preprocessor/preprocessor_1.c \

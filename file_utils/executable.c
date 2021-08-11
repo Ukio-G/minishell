@@ -6,7 +6,7 @@
 /*   By: atawana <atawana@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/11 02:46:06 by atawana           #+#    #+#             */
-/*   Updated: 2021/08/11 03:06:41 by atawana          ###   ########.fr       */
+/*   Updated: 2021/08/11 15:28:14 by atawana          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "permission.h"
 #include <basic_shell.h>
 #include <printf.h>
+#include <main_functions/main_functions.h>
 
 char	*make_abs_path(char *path, char *filename)
 {
@@ -26,6 +27,7 @@ char	*make_abs_path(char *path, char *filename)
 	path_size = ft_strlen(path);
 	filename_size = ft_strlen(filename);
 	result = malloc(path_size + filename_size + 2);
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
 	if (!result)
 		return (0);
 	ft_memcpy(result, path, path_size);
@@ -43,9 +45,13 @@ char	*is_bin_in_env(char *binary_name)
 	char	*abs_path;
 
 	path = find_env_by_key("PATH");
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  path);
+
 	if (!path)
 		return (0);
 	path_splitted = ft_split(path, ':');
+	print_split_leak((void**)path_splitted, __LINE__, __FILE__);
+
 	free(path);
 	i = 0;
 	while (path_splitted[i])
@@ -54,12 +60,14 @@ char	*is_bin_in_env(char *binary_name)
 		if (abs_path)
 		{
 			if (is_file_exist(abs_path))
+			{
+				ft_split_free(path_splitted);
 				return (abs_path);
+			}
 			free(abs_path);
 		}
-		else
-			exit(123);
 	}
+	ft_split_free(path_splitted);
 	return (0);
 }
 
@@ -110,19 +118,25 @@ char	*make_bin_path(char *input)
 {
 	char	buffer[1024];
 	char	*result;
+	char *tmp_leak;
 
 	if (ft_strncmp(input, "./", 2) == 0)
 	{
 		ft_memset(buffer, 0, 1024);
 		getcwd(buffer, 1024);
 		result = ft_calloc(1, ft_strlen(buffer) + 2 + ft_strlen(input + 2));
+		printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  result);
 		ft_memcpy(result, buffer, ft_strlen(buffer));
 		result[ft_strlen(buffer)] = '/';
 		ft_memcpy(result + ft_strlen(result), input + 2, ft_strlen(input + 2));
 		return (result);
 	}
 	else if (ft_strncmp(input, "/", 1) == 0 || is_builtin(input))
-		return (ft_strdup(input));
+	{
+		tmp_leak = ft_strdup(input);
+		printf("LEAK %s:%i %p\n", __FILE__, __LINE__,  tmp_leak);
+		return tmp_leak;
+	}
 	else
 		return (is_bin_in_env(input));
 }

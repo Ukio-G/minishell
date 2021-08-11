@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <printf.h>
 #include "basic_shell.h"
 
 int	biggest_len(char *str1, char *str2)
@@ -66,10 +67,13 @@ int	cd(t_process_info *info)
 	mode_t		mode;
 
 	old_path = find_env_by_key("PWD");
+	printf("LEAK %s:%i %p\n", __FILE__, __LINE__, old_path);
+
 	if ((get_2d_array_size(info->argv) == 1) || (ft_strncmp("--", info->argv[1],
 				biggest_len("--", info->argv[1])) == 0))
 	{
 		current_path = find_env_by_key("HOME");
+		printf("LEAK %s:%i %p\n", __FILE__, __LINE__, current_path);
 		return (change_and_update(current_path, old_path));
 	}
 	if (process_path(info->argv, &current_path) == -1)

@@ -14,6 +14,8 @@
 
 t_executable_file_error	is_correct_executable(char *cmd)
 {
+	char *tmp;
+
 	if (*cmd == 0)
 		return (E_FILE_CMD_NOT_FOUND);
 	if (is_builtin(cmd))
@@ -27,8 +29,10 @@ t_executable_file_error	is_correct_executable(char *cmd)
 	}
 	else
 	{
-		if (!is_bin_in_env(cmd))
+		tmp = is_bin_in_env(cmd);
+		if (!tmp)
 			return (E_FILE_CMD_NOT_FOUND);
+		free(tmp);
 	}
 	return (E_FILE_NO_ERROR);
 }
